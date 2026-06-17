@@ -28,7 +28,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
 /* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar);min-height:100vh;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow:hidden}
 .sidebar-top{padding:1.1rem 1rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0}
-.sidebar-logo img{height:26px;display:block;margin-bottom:.6rem}
+img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 .restaurant-chip{display:flex;align-items:center;gap:.5rem}
 .restaurant-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
 .restaurant-name{font-size:.76rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -92,7 +92,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
 .ov-card-title{display:flex;align-items:center;gap:.55rem;font-size:.86rem;font-weight:700}
 .ov-card-title svg{stroke:var(--red);width:16px;height:16px}
 
-.ov-dish-row{display:flex;align-items:center;gap:.8rem;padding:.75rem 1.2rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.ov-dish-row{display:flex;align-items:center;gap:.8rem;padding:.85rem 1.2rem;border-bottom:1px solid rgba(0,0,0,.05)}
 .ov-dish-row:last-child{border-bottom:none}
 .ov-dish-thumb{width:38px;height:38px;border-radius:8px;background:#f5f5f5;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .ov-dish-thumb svg{stroke:var(--subtle)}
@@ -103,11 +103,11 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
 .ov-view-all{display:block;padding:.7rem 1.2rem;font-size:.74rem;color:var(--red);font-weight:600;text-decoration:none;border-top:1px solid var(--border)}
 .ov-view-all:hover{background:var(--light)}
 
-.ov-perf-row{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.ov-perf-row{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;border-bottom:1px solid rgba(0,0,0,.05)}
 .ov-perf-row:last-child{border-bottom:none}
-.ov-perf-label{font-size:.78rem;color:var(--muted)}
+.ov-perf-label{font-size:.88rem;color:var(--muted);font-weight:500}
 .ov-perf-right{display:flex;align-items:center;gap:.5rem}
-.ov-perf-val{font-size:.84rem;font-weight:700}
+.ov-perf-val{font-size:1.4rem;font-weight:700;color:var(--text)}
 .ov-perf-trend{font-size:.68rem;font-weight:600;color:var(--green)}
 
 /* date range picker */
@@ -291,12 +291,13 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
 .perf-kpi-value{font-size:1.35rem;font-weight:700;line-height:1;margin-bottom:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .perf-kpi-trend{font-size:.65rem;font-weight:600;color:var(--green)}
 .perf-kpi-trend.down{color:var(--red)}
-.perf-kpi.top-perf{border-color:rgba(240,107,113,.2);background:var(--light)}
-.top-perf-dish{display:flex;align-items:center;gap:.5rem;margin-top:.35rem;min-width:0}
-.top-perf-thumb{width:30px;height:30px;border-radius:7px;background:#f5f5f5;flex-shrink:0;overflow:hidden;object-fit:cover}
+.perf-kpi.top-perf{border-color:rgba(240,107,113,.25);background:linear-gradient(135deg,#fff5f5,#fff);display:flex;flex-direction:column;justify-content:center}
+.top-perf-dish{display:flex;align-items:center;gap:.6rem;margin-top:.5rem;min-width:0}
+.top-perf-thumb{width:38px;height:38px;border-radius:9px;background:#f5f5f5;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.top-perf-thumb img{width:100%;height:100%;object-fit:cover}
 .top-perf-info{min-width:0;flex:1}
-.top-perf-name{font-size:.7rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
-.top-perf-rate{font-size:.62rem;color:var(--muted);white-space:nowrap}
+.top-perf-name{font-size:.76rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;color:var(--text)}
+.top-perf-rate{font-size:.67rem;color:var(--red);font-weight:600;margin-top:.15rem;white-space:nowrap}
 
 /* ── PERF 5-COL TABLES ── */
 .perf-tables{display:grid;grid-template-columns:repeat(5,1fr);gap:.65rem;margin-bottom:1rem}
@@ -338,7 +339,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-top">
-    <img src="logo1.png" alt="VistaGusto" class="sidebar-logo" style="height:38px;display:block;margin-bottom:.7rem">
+    <img src="logo1.png" alt="VistaGusto" class="sidebar-logo">
     <div class="restaurant-chip">
       <div class="restaurant-chip-dot"></div>
       <div>
@@ -413,7 +414,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
         <div class="ov-kpi">
           <div class="ov-kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M16 21h.01"/><path d="M21 21h.01"/></svg></div>
           <div class="ov-kpi-body">
-            <div class="ov-kpi-label">QR Scans today</div>
+            <div class="ov-kpi-label">QR Scans — today</div>
             <div class="ov-kpi-value" id="kpi-scans">—</div>
             <div class="ov-kpi-trend up" id="kpi-scans-trend">—</div>
           </div>
@@ -421,7 +422,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
         <div class="ov-kpi">
           <div class="ov-kpi-icon" style="background:#f0fdf4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
           <div class="ov-kpi-body">
-            <div class="ov-kpi-label">QR Scans this week</div>
+            <div class="ov-kpi-label">QR Scans — this week</div>
             <div class="ov-kpi-value" id="kpi-scans-week">—</div>
             <div class="ov-kpi-trend up" id="kpi-scans-week-trend">—</div>
           </div>
@@ -429,7 +430,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
         <div class="ov-kpi">
           <div class="ov-kpi-icon" style="background:#ede9fe"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
           <div class="ov-kpi-body">
-            <div class="ov-kpi-label">Menu views (total)</div>
+            <div class="ov-kpi-label">Menu views — this week</div>
             <div class="ov-kpi-value" id="kpi-views">—</div>
             <div class="ov-kpi-trend up" id="kpi-views-trend">—</div>
           </div>
@@ -450,7 +451,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
           <div class="ov-card-header">
             <div class="ov-card-title">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              QR Scan evolution
+              Menu views evolution
             </div>
             <select class="search-input" style="font-size:.72rem;padding:.28rem .65rem" onchange="setChartFilter(this.value)">
               <option value="7d">Last 7 days</option>
@@ -492,11 +493,10 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
               Performance summary
             </div>
           </div>
-          <div class="ov-perf-row"><span class="ov-perf-label">QR Scans today</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-scans">—</span><span class="ov-perf-trend" id="ps-scans-trend"></span></div></div>
-          <div class="ov-perf-row"><span class="ov-perf-label">QR Scans this week</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-week">—</span><span class="ov-perf-trend" id="ps-week-trend"></span></div></div>
-          <div class="ov-perf-row"><span class="ov-perf-label">Menu views (total)</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-views">—</span><span class="ov-perf-trend" id="ps-views-trend"></span></div></div>
-          <div class="ov-perf-row"><span class="ov-perf-label">Dishes viewed in AR</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-ar">—</span></div></div>
-          <div class="ov-perf-row"><span class="ov-perf-label">3D views</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-3d">—</span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">QR Scans — today</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-scans">—</span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">QR Scans — this week</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-week">—</span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">Menu views — this week</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-views">—</span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">AR views — this week</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-ar">—</span></div></div>
         </div>
 
       </div>
@@ -559,9 +559,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
               <div class="fg"><label>Dish name</label><input type="text" id="editDishName" placeholder="e.g. Truffle Pizza"></div>
               <div class="fg"><label>Category</label>
                 <select id="editDishCategory">
-                  <option>Starters</option>
-                  <option>Mains</option>
-                  <option>Desserts</option>
+                  <option>Food</option>
                   <option>Drinks</option>
                 </select>
               </div>
@@ -656,9 +654,12 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
           <div class="perf-kpi-trend" id="p-rate-trend"></div>
         </div>
         <div class="perf-kpi top-perf">
-          <div class="perf-kpi-label">Top performer</div>
+          <div class="perf-kpi-label" style="display:flex;align-items:center;gap:.35rem">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+            Top performer
+          </div>
           <div class="top-perf-dish">
-            <div class="top-perf-thumb" id="p-top-thumb" style="display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg></div>
+            <div class="top-perf-thumb" id="p-top-thumb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg></div>
             <div class="top-perf-info">
               <span class="top-perf-name" id="p-top-name">—</span>
               <div class="top-perf-rate" id="p-top-rate"></div>
@@ -671,7 +672,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
       <div style="display:grid;grid-template-columns:1fr 300px;gap:.9rem;margin-bottom:.9rem">
         <div class="chart-card">
           <div class="chart-title" style="display:flex;align-items:center;justify-content:space-between">
-            <span>QR Scan evolution</span>
+            <span>Menu views evolution</span>
           </div>
           <div class="chart-wrap" style="height:200px"><canvas id="perfScanChart"></canvas></div>
         </div>
@@ -936,7 +937,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
     <form onsubmit="addDish(event)">
       <div class="fg"><label>Dish name</label><input type="text" required></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
-        <div class="fg"><label>Category</label><select><option>Starter</option><option>Main</option><option>Dessert</option><option>Drink</option></select></div>
+        <div class="fg"><label>Category</label><select id="addDishCategory"><option>Food</option><option>Drinks</option></select></div>
         <div class="fg"><label>Price</label><input type="text" placeholder="€0.00"></div>
       </div>
       <div class="fg"><label>Description</label><textarea rows="2"></textarea></div>
@@ -1054,10 +1055,10 @@ async function loadOverview(range = '7d') {
 
   const cnt = (arr, type) => arr.filter(e => e.event_type === type).length;
 
-  const scansToday  = cnt(todayEvt, 'qr_scan') || cnt(todayEvt, 'menu_view');
-  const scansPrev   = cnt(yestEvt, 'qr_scan') || cnt(yestEvt, 'menu_view');
-  const scansWeek   = cnt(curr, 'qr_scan') || cnt(curr, 'menu_view');
-  const scansWkPrev = cnt(prev, 'qr_scan') || cnt(prev, 'menu_view');
+  const scansToday  = cnt(todayEvt, 'qr_scan');
+  const scansPrev   = cnt(yestEvt, 'qr_scan');
+  const scansWeek   = cnt(curr, 'qr_scan');
+  const scansWkPrev = cnt(prev, 'qr_scan');
   const menuViews   = cnt(curr, 'menu_view');
   const menuPrev    = cnt(prev, 'menu_view');
   const arViews     = cnt(curr, 'ar_view');
@@ -1068,9 +1069,9 @@ async function loadOverview(range = '7d') {
   document.getElementById('kpi-scans-week').textContent = scansWeek.toLocaleString();
   document.getElementById('kpi-views').textContent = menuViews.toLocaleString();
   document.getElementById('kpi-tickets-count').textContent = openTickets || 0;
-  setTrendEl('kpi-scans-trend', scansToday, scansPrev, 'vs yesterday');
-  setTrendEl('kpi-scans-week-trend', scansWeek, scansWkPrev, `vs previous ${days}d`);
-  setTrendEl('kpi-views-trend', menuViews, menuPrev, `vs previous ${days}d`);
+  setTrendEl('kpi-scans-trend', scansToday, scansPrev, '');
+  setTrendEl('kpi-scans-week-trend', scansWeek, scansWkPrev, '');
+  setTrendEl('kpi-views-trend', menuViews, menuPrev, '');
   const tickTrend = document.getElementById('kpi-tickets-trend');
   if (openTickets > 0) { tickTrend.style.display = 'flex'; tickTrend.textContent = (waitingTickets?.length || 0) + ' awaiting reply'; }
 
@@ -1079,10 +1080,6 @@ async function loadOverview(range = '7d') {
   document.getElementById('ps-week').textContent  = scansWeek.toLocaleString();
   document.getElementById('ps-views').textContent = menuViews.toLocaleString();
   document.getElementById('ps-ar').textContent    = arViews.toLocaleString();
-  document.getElementById('ps-3d').textContent    = views3d.toLocaleString();
-  setTrendEl('ps-scans-trend', scansToday, scansPrev, 'vs yesterday');
-  setTrendEl('ps-week-trend', scansWeek, scansWkPrev, `vs prev`);
-  setTrendEl('ps-views-trend', menuViews, menuPrev, 'vs prev');
 
   // Dish-level view maps from analytics
   const dishViewMap = {}, dishArMap = {};
@@ -1131,7 +1128,7 @@ async function loadOverview(range = '7d') {
     const d = new Date(now - i * 86400000);
     labels.push(d.toLocaleDateString('en-GB', { day:'numeric', month:'short' }));
     const ds = d.toISOString().split('T')[0];
-    scanData.push(curr.filter(e => (e.event_type === 'qr_scan' || e.event_type === 'menu_view') && e.created_at.startsWith(ds)).length);
+    scanData.push(curr.filter(e => e.event_type === 'menu_view' && e.created_at.startsWith(ds)).length);
   }
 
   setTimeout(() => {
@@ -1239,7 +1236,7 @@ async function loadPerformance(range) {
     document.getElementById('p-top-name').textContent = topDish.name;
     document.getElementById('p-top-rate').textContent = `${topDish.views} views · ${topDish.engRate}% AR`;
     if (topDish.photo_url) {
-      document.getElementById('p-top-thumb').innerHTML = `<img src="${topDish.photo_url}" class="top-perf-thumb" style="width:32px;height:32px;object-fit:cover;border-radius:7px">`;
+      document.getElementById('p-top-thumb').innerHTML = topDish.photo_url ? `<img src="${topDish.photo_url}" style="width:38px;height:38px;object-fit:cover;border-radius:9px">` : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg>`;
     }
   }
 
@@ -1282,7 +1279,7 @@ async function loadPerformance(range) {
     const d = new Date(now - i * 86400000);
     labels.push(d.toLocaleDateString('en-GB', { day:'numeric', month:'short' }));
     const ds = d.toISOString().split('T')[0];
-    scanData.push(curr.filter(e => (e.event_type === 'qr_scan' || e.event_type === 'menu_view') && e.created_at.startsWith(ds)).length);
+    scanData.push(curr.filter(e => e.event_type === 'menu_view' && e.created_at.startsWith(ds)).length);
   }
 
   const ctx = document.getElementById('perfScanChart');
@@ -1411,14 +1408,15 @@ async function addDish(e) {
   e.preventDefault();
   const form = e.target;
   const name = form.querySelector('input[type="text"]').value.trim();
-  const categoryName = form.querySelector('select').value;
+  const categoryName = document.getElementById('addDishCategory').value;
   const price = parseFloat(form.querySelector('input[placeholder="€0.00"]').value) || 0;
 
   const [{ data: cats }, { data: menus }] = await Promise.all([
     db.from('categories').select('id,name').eq('restaurant_id', RESTAURANT_ID),
     db.from('menus').select('id').eq('restaurant_id', RESTAURANT_ID).eq('is_active', true).limit(1)
   ]);
-  const cat = cats?.find(c => c.name === categoryName);
+  const cat = cats?.find(c => c.name === categoryName)
+    || (categoryName === 'Food' ? cats?.find(c => !isDrinkCat(c.name)) : cats?.find(c => isDrinkCat(c.name)));
   const menuId = menus?.[0]?.id || null;
 
   const { error } = await db.from('dishes').insert({
@@ -1453,14 +1451,24 @@ function openEditDish(id) {
 }
 
 async function saveEditDish() {
-  if (!currentEditDish) return;
+  if (!currentEditDish) { showToast('No dish selected'); return; }
   const name = document.getElementById('editDishName').value.trim();
   const price = parseFloat(document.getElementById('editDishPrice').value) || 0;
   const description = document.getElementById('editDishDesc').value.trim();
   const is_active = document.getElementById('editDishActive').checked;
+  const categoryName = document.getElementById('editDishCategory').value;
 
-  const { error } = await db.from('dishes').update({ name, price, description, is_active, updated_at: new Date().toISOString() }).eq('id', currentEditDish.id);
-  if (error) { showToast('Error saving dish'); return; }
+  const { data: cats, error: catErr } = await db.from('categories').select('id,name').eq('restaurant_id', RESTAURANT_ID);
+  if (catErr) { showToast('Category error: ' + catErr.message); return; }
+
+  const cat = (cats || []).find(c => c.name === categoryName)
+    || (categoryName === 'Food' ? (cats || []).find(c => !isDrinkCat(c.name)) : (cats || []).find(c => isDrinkCat(c.name)));
+
+  const updates = { name, price, description, is_active, updated_at: new Date().toISOString() };
+  if (cat) updates.category_id = cat.id;
+
+  const { error } = await db.from('dishes').update(updates).eq('id', currentEditDish.id);
+  if (error) { showToast('Save failed: ' + error.message); console.error('Save error:', error); return; }
   showToast('Dish saved', 'success');
   loadDishes();
   showSection('menu', document.querySelectorAll('.nav-item')[1]);
@@ -1668,11 +1676,22 @@ async function saveRestaurantInfo() {
   document.getElementById('sidebarRestName').textContent = name;
   showToast('Info saved', 'success');
 }
-function previewEditPhoto(input) {
-  if (!input.files[0]) return;
+async function previewEditPhoto(input) {
+  if (!input.files[0] || !currentEditDish) return;
+  const file = input.files[0];
+  // Show preview immediately
   const reader = new FileReader();
   reader.onload = e => { document.getElementById('editPhotoPreview').innerHTML = `<img src="${e.target.result}" style="width:100%;height:140px;object-fit:cover;border-radius:8px">`; };
-  reader.readAsDataURL(input.files[0]);
+  reader.readAsDataURL(file);
+  // Upload to Supabase Storage
+  const path = `dishes/${currentEditDish.id}_${Date.now()}.${file.name.split('.').pop()}`;
+  const { error: upErr } = await db.storage.from('dish-photos').upload(path, file, { upsert: true });
+  if (upErr) { showToast('Photo upload failed: ' + upErr.message); return; }
+  const { data: { publicUrl } } = db.storage.from('dish-photos').getPublicUrl(path);
+  const { error } = await db.from('dishes').update({ photo_url: publicUrl, updated_at: new Date().toISOString() }).eq('id', currentEditDish.id);
+  if (error) { showToast('Error saving photo'); return; }
+  currentEditDish.photo_url = publicUrl;
+  showToast('Photo saved', 'success');
 }
 
 function previewLogo(input) {
@@ -1724,21 +1743,19 @@ async function loadSubscription() {
 async function init() {
   const { data: { session } } = await db.auth.getSession();
 
-  if (session) {
-    const { data: profile } = await db.from('profiles').select('role, restaurant_id').eq('id', session.user.id).single();
-    if (!profile || profile.role !== 'restaurant') { await db.auth.signOut(); window.location.href = 'login.html'; return; }
-    RESTAURANT_ID = profile.restaurant_id;
-    document.getElementById('currentEmail').value = session.user.email || '';
-  } else {
-    // TEMP: no auth session — use hardcoded ID so dashboard is previewable
-    RESTAURANT_ID = '01bd3795-f162-4768-b04b-592790c12be1';
-  }
+  if (!session) { window.location.href = 'login.html'; return; }
+  const { data: profile } = await db.from('profiles').select('role, restaurant_id').eq('id', session.user.id).single();
+  if (!profile || profile.role !== 'restaurant') { await db.auth.signOut(); window.location.href = 'login.html'; return; }
+  RESTAURANT_ID = profile.restaurant_id;
+  document.getElementById('currentEmail').value = session.user.email || '';
 
   if (RESTAURANT_ID) {
     const { data: restaurant } = await db.from('restaurants').select('*').eq('id', RESTAURANT_ID).single();
     currentRestaurant = restaurant;
+    const restName = restaurant?.name || '';
     if (restaurant) {
-      document.getElementById('sidebarRestName').textContent = restaurant.name || '';
+      document.getElementById('sidebarRestName').textContent = restName;
+      document.getElementById('topbarTitle').textContent = 'Welcome, ' + restName;
       document.getElementById('restName').value = restaurant.name || '';
       document.getElementById('restPhone').value = restaurant.phone || '';
       document.getElementById('restAddress').value = restaurant.address || '';

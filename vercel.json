@@ -1,0 +1,8 @@
+{
+  "rewrites": [{ "source": "/", "destination": "/login.html" }],
+  "functions": {
+    "api/webhook.js": {
+      "bodyParser": false
+    }
+  }
+}
