@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>myvistagusto — Dashboard</title>
+<link rel="icon" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --red:#E53935;--pink:#EF6C00;--light:#FEECEC;
+  --g:linear-gradient(135deg,#E53935,#EF5350);
+  --sidebar:230px;
+  --bg:#F5F5F5;--card:#fff;
+  --border:rgba(0,0,0,.08);
+  --shadow:0 2px 8px rgba(0,0,0,.06);
+  --radius:12px;--radius-sm:8px;
+  --text:#1a1a1a;--muted:#888;--subtle:#bbb;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-border:rgba(22,163,74,.2);
+  --amber:#d97706;--amber-bg:#fffbeb;
+  --purple:#7C3AED;--purple-bg:#EDE9FE;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);min-height:100vh;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow:hidden}
+.sidebar-top{padding:1.1rem 1rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.sidebar-logo img{height:26px;display:block;margin-bottom:.6rem}
+.restaurant-chip{display:flex;align-items:center;gap:.5rem}
+.restaurant-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
+.restaurant-name{font-size:.76rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.restaurant-sub{font-size:.6rem;color:var(--subtle);text-transform:uppercase;letter-spacing:.07em;margin-top:.15rem}
+.sidebar-nav{flex:1;padding:.6rem .55rem;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:.65rem;padding:.6rem .82rem;border-radius:var(--radius-sm);cursor:pointer;color:#666;font-size:.8rem;font-weight:500;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:'Poppins',sans-serif;margin-bottom:.06rem;white-space:nowrap;overflow:hidden}
+.nav-item:hover{background:#f5f5f5;color:var(--text)}
+.nav-item.active{background:var(--red);color:#fff;font-weight:600}
+.nav-icon{width:15px;height:15px;flex-shrink:0;stroke:#aaa;transition:stroke .15s}
+.nav-item:hover .nav-icon{stroke:var(--text)}
+.nav-item.active .nav-icon{stroke:#fff}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.58rem;font-weight:700;padding:.1rem .4rem;border-radius:50px;min-width:16px;text-align:center;flex-shrink:0}
+.sidebar-footer{padding:.85rem 1rem;border-top:1px solid var(--border);flex-shrink:0}
+.user-row{display:flex;align-items:center;gap:.6rem;overflow:hidden}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:.73rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-role{font-size:.6rem;color:var(--muted)}
+.btn-logout{background:none;border:none;cursor:pointer;color:var(--subtle);padding:.3rem;border-radius:6px;transition:color .15s;display:flex;align-items:center;flex-shrink:0}
+.btn-logout:hover{color:var(--red)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0}
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.6rem;height:56px;box-shadow:0 2px 8px rgba(0,0,0,.03);flex-shrink:0}
+.topbar-left{min-width:0}
+.topbar-title{font-size:.92rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar-sub{font-size:.68rem;color:var(--muted);margin-top:.05rem}
+.topbar-right{display:flex;align-items:center;gap:.7rem;flex-shrink:0}
+.topbar-date{font-size:.72rem;font-weight:500;color:var(--text);background:#fff;padding:.3rem .85rem;border-radius:8px;white-space:nowrap;border:1px solid var(--border);display:flex;align-items:center;gap:.4rem}
+.topbar-date svg{stroke:var(--muted)}
+.icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s;position:relative}
+.icon-btn:hover{border-color:var(--red)}
+.notif-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+
+.content{flex:1;padding:1.4rem 1.6rem;min-width:0}
+.section{display:none}
+.section.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.card-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.card-title{font-size:.83rem;font-weight:700}
+
+/* ── OVERVIEW ── */
+.ov-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+.ov-kpi{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.2rem 1.3rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem;min-width:0}
+.ov-kpi-icon{width:44px;height:44px;border-radius:10px;background:var(--light);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ov-kpi-icon svg{stroke:var(--red);width:20px;height:20px}
+.ov-kpi-body{min-width:0;flex:1}
+.ov-kpi-label{font-size:.7rem;color:var(--muted);font-weight:500;margin-bottom:.22rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ov-kpi-value{font-size:2rem;font-weight:700;line-height:1.05;margin-bottom:.18rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ov-kpi-trend{font-size:.7rem;font-weight:600;display:flex;align-items:center;gap:.2rem}
+.ov-kpi-trend.up{color:var(--green)}
+.ov-kpi-trend.warn{color:var(--red)}
+
+.ov-mid{display:grid;grid-template-columns:1fr 320px;gap:1.2rem;margin-bottom:1.2rem}
+.ov-bot{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+
+.ov-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.ov-card-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.3rem;border-bottom:1px solid var(--border)}
+.ov-card-title{display:flex;align-items:center;gap:.55rem;font-size:.86rem;font-weight:700}
+.ov-card-title svg{stroke:var(--red);width:16px;height:16px}
+
+.ov-dish-row{display:flex;align-items:center;gap:.8rem;padding:.75rem 1.2rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.ov-dish-row:last-child{border-bottom:none}
+.ov-dish-thumb{width:38px;height:38px;border-radius:8px;background:#f5f5f5;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ov-dish-thumb svg{stroke:var(--subtle)}
+.ov-dish-rank{font-size:.72rem;font-weight:700;color:var(--subtle);width:16px;text-align:center;flex-shrink:0}
+.ov-dish-name{flex:1;font-size:.82rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ov-dish-badge{font-size:.68rem;font-weight:600;color:var(--red);background:var(--light);padding:.22rem .6rem;border-radius:50px;white-space:nowrap;flex-shrink:0}
+.ov-dish-badge.ar{color:var(--purple);background:var(--purple-bg)}
+.ov-view-all{display:block;padding:.7rem 1.2rem;font-size:.74rem;color:var(--red);font-weight:600;text-decoration:none;border-top:1px solid var(--border)}
+.ov-view-all:hover{background:var(--light)}
+
+.ov-perf-row{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.ov-perf-row:last-child{border-bottom:none}
+.ov-perf-label{font-size:.78rem;color:var(--muted)}
+.ov-perf-right{display:flex;align-items:center;gap:.5rem}
+.ov-perf-val{font-size:.84rem;font-weight:700}
+.ov-perf-trend{font-size:.68rem;font-weight:600;color:var(--green)}
+
+/* date range picker */
+.date-range-btn{display:flex;align-items:center;gap:.45rem;background:#fff;border:1px solid var(--border);border-radius:8px;padding:.4rem .9rem;font-size:.75rem;font-weight:500;color:var(--text);cursor:pointer;position:relative;font-family:'Poppins',sans-serif}
+.date-range-btn:hover{border-color:var(--red)}
+.date-range-btn svg{stroke:var(--muted)}
+.date-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;min-width:160px;overflow:hidden;display:none}
+.date-dropdown.open{display:block}
+.date-opt{display:block;width:100%;padding:.65rem 1rem;text-align:left;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:500;color:var(--text);background:none;border:none;cursor:pointer}
+.date-opt:hover{background:var(--light);color:var(--red)}
+.date-opt.active{color:var(--red);font-weight:600}
+
+/* keep these for other sections */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.1rem}
+.kpi-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1rem 1.1rem;box-shadow:var(--shadow);position:relative;overflow:hidden;min-width:0}
+.kpi-label{font-size:.64rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
+.kpi-value{font-size:1.4rem;font-weight:700;line-height:1.1;margin-bottom:.12rem}
+.kpi-sub{font-size:.67rem;color:var(--muted)}
+.kpi-up{color:var(--green);font-weight:600}
+.kpi-down{color:var(--red);font-weight:600}
+.kpi-warn{color:var(--amber);font-weight:600}
+.perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+
+/* ── CHART ── */
+.chart-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.1rem 1.2rem;box-shadow:var(--shadow)}
+.chart-title{font-size:.83rem;font-weight:700;margin-bottom:.9rem}
+.chart-wrap{position:relative;height:190px}
+
+/* ── TOP DISHES ── */
+.dish-row{display:flex;align-items:center;gap:.7rem;padding:.65rem 1.1rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.dish-row:last-child{border-bottom:none}
+.dish-rank{width:20px;font-size:.7rem;font-weight:700;color:var(--subtle);flex-shrink:0;text-align:center}
+.dish-img{width:34px;height:34px;border-radius:7px;object-fit:cover;flex-shrink:0;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
+.dish-name{flex:1;font-size:.78rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.dish-views{font-size:.72rem;color:var(--muted);flex-shrink:0;white-space:nowrap}
+
+/* ── PERF SUMMARY ── */
+.perf-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1.1rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.perf-row:last-child{border-bottom:none}
+.perf-label{font-size:.75rem;color:var(--muted)}
+.perf-val{font-size:.78rem;font-weight:700;color:var(--text)}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:.18rem .5rem;border-radius:50px;font-size:.64rem;font-weight:600;white-space:nowrap}
+.badge-active{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-open{background:rgba(240,107,113,.12);color:var(--red)}
+.badge-pending{background:var(--amber-bg);color:var(--amber)}
+.badge-resolved{background:#f0f0f0;color:#888}
+.badge-progress{background:rgba(59,130,246,.1);color:#2563eb}
+.badge-waiting{background:rgba(240,107,113,.08);color:var(--pink)}
+.badge-premium{background:var(--light);color:var(--red);border:1px solid rgba(240,107,113,.25)}
+.badge-starter{background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.48rem .9rem;border-radius:7px;font-family:'Poppins',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--g);color:#fff}
+.btn-primary:hover{opacity:.88}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{background:#f5f5f5;color:var(--text)}
+.btn-outline{background:#fff;color:var(--red);border:1.5px solid rgba(240,107,113,.3)}
+.btn-outline:hover{background:var(--light)}
+.btn-sm{padding:.26rem .62rem;font-size:.7rem}
+.btn-danger{background:rgba(240,107,113,.08);color:var(--red);border:1px solid rgba(240,107,113,.2)}
+
+/* ── FILTERS ── */
+.filter-bar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.filter-btn{padding:.28rem .75rem;border-radius:50px;border:1.5px solid var(--border);background:#fff;font-family:'Poppins',sans-serif;font-size:.7rem;font-weight:500;cursor:pointer;color:#666;transition:all .15s;white-space:nowrap}
+.filter-btn.active{background:var(--light);border-color:var(--red);color:var(--red);font-weight:600}
+.search-input{padding:.38rem .8rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Poppins',sans-serif;font-size:.77rem;outline:none;transition:border-color .2s;background:#fff;color:var(--text)}
+.search-input:focus{border-color:var(--red)}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;width:100%}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{background:#f9f8f7;padding:.6rem 1rem;text-align:left;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:.7rem 1rem;font-size:.77rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tbody tr:last-child td{border-bottom:none}
+.data-table tbody tr:hover td{background:#fafafa}
+
+/* ── TOGGLE ── */
+.toggle{position:relative;display:inline-block;width:34px;height:18px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:#ddd;border-radius:18px;cursor:pointer;transition:.2s}
+.toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked + .toggle-slider{background:var(--red)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(16px)}
+
+/* ── TICKETS ── */
+.tickets-layout{display:grid;grid-template-columns:280px 1fr;gap:.8rem;height:calc(100vh - 180px);min-height:450px}
+.ticket-list{background:#fff;border-radius:var(--radius);border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.ticket-list-header{padding:.8rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.ticket-items{flex:1;overflow-y:auto}
+.ticket-item{padding:.75rem .9rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.ticket-item:hover{background:#fafafa}
+.ticket-item.active{background:var(--light)}
+.ti-subject{font-size:.75rem;font-weight:600;margin-bottom:.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ti-meta{display:flex;align-items:center;gap:.3rem;margin-top:.2rem;flex-wrap:wrap}
+.chat-panel{background:#fff;border-radius:var(--radius);border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.chat-header{padding:.85rem 1.2rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:.7rem}
+.chat-header-title{font-size:.86rem;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-messages{flex:1;overflow-y:auto;padding:1.2rem 1.2rem;display:flex;flex-direction:column;gap:0;background:#f7f7f8}
+.chat-date-sep{text-align:center;margin:1rem 0 .8rem;font-size:.68rem;color:#999;font-weight:500;background:#e8e8e8;display:inline-block;padding:.2rem .8rem;border-radius:50px;align-self:center}
+.msg-wrap{display:flex;align-items:flex-end;gap:.55rem;margin-bottom:.6rem}
+.msg-wrap.restaurant{flex-direction:row-reverse}
+.msg-wrap.support{flex-direction:row}
+.msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:#fff;flex-shrink:0;align-self:flex-end}
+.msg-avatar.restaurant{background:#25D366}
+.msg-avatar.support{background:#1a1a1a}
+.msg{max-width:70%;display:flex;flex-direction:column}
+.msg-bubble{padding:.7rem .95rem;border-radius:16px;font-size:.79rem;line-height:1.65;box-shadow:0 1px 2px rgba(0,0,0,.08);position:relative}
+.msg.restaurant .msg-bubble{background:#DCF8C6;color:#1a1a1a;border-bottom-right-radius:4px}
+.msg.support .msg-bubble{background:#fff;color:#1a1a1a;border-bottom-left-radius:4px;border:1px solid var(--border)}
+.msg-footer{display:flex;align-items:center;justify-content:flex-end;gap:.3rem;margin-top:.3rem;padding:0 .1rem}
+.msg-time{font-size:.62rem;color:#aaa}
+.msg-check{font-size:.7rem;color:#34B7F1;letter-spacing:-.1em}
+.chat-input-wrap{padding:.7rem 1rem;border-top:1px solid var(--border);display:flex;align-items:flex-end;gap:.5rem;flex-shrink:0;background:#fff}
+.chat-input-icons{display:flex;align-items:center;gap:.3rem;flex-shrink:0}
+.chat-icon-btn{width:32px;height:32px;border:none;background:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .15s}
+.chat-icon-btn:hover{background:#f5f5f5;color:var(--text)}
+.chat-input{flex:1;border:none;border-radius:22px;padding:.6rem 1rem;font-family:'Poppins',sans-serif;font-size:.8rem;outline:none;resize:none;max-height:90px;background:#f5f5f5;line-height:1.4}
+.chat-send-btn{width:38px;height:38px;border-radius:50%;background:var(--g);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.chat-send-btn:hover{opacity:.88}
+.chat-send-btn svg{stroke:#fff}
+
+/* ── NEW TICKET MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.32);z-index:500;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:var(--radius);padding:1.8rem;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,.12);position:relative;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:.9rem;font-weight:700;margin-bottom:1.1rem}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;padding:.2rem;border-radius:6px;transition:color .15s}
+.modal-close:hover{color:var(--red)}
+.modal-footer{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1.1rem}
+.fg{margin-bottom:.85rem}
+.fg label{display:block;font-size:.67rem;font-weight:600;color:#555;margin-bottom:.28rem;letter-spacing:.02em;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{width:100%;padding:.6rem .8rem;border:1.5px solid rgba(0,0,0,.1);border-radius:7px;font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--text);outline:none;transition:border-color .2s;background:#fff}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red)}
+.fg textarea{resize:vertical;min-height:80px}
+
+/* ── SUBSCRIPTION ── */
+.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.plan-feature{display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.78rem}
+.plan-feature:last-child{border-bottom:none}
+.plan-feature svg{stroke:var(--green);flex-shrink:0}
+.invoice-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1rem;border-bottom:1px solid var(--border);font-size:.77rem}
+.invoice-row:last-child{border-bottom:none}
+
+/* ── SETTINGS ── */
+.settings-section{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.4rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.settings-title{font-size:.85rem;font-weight:700;margin-bottom:1rem}
+.logo-upload{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:1.4rem;text-align:center;cursor:pointer;transition:border-color .15s;position:relative}
+.logo-upload:hover{border-color:var(--red)}
+.password-rule{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--muted);margin-bottom:.25rem}
+.password-rule.ok{color:var(--green)}
+.password-rule svg{flex-shrink:0}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,.1);border-radius:4px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.4rem;right:1.4rem;z-index:999;background:#1a1a1a;color:#fff;padding:.65rem 1.1rem;border-radius:9px;font-size:.76rem;font-weight:500;transform:translateY(80px);opacity:0;transition:all .28s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.18)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--g)}
+
+/* ── CTA BANNER ── */
+.cta-banner{background:var(--g);border-radius:var(--radius);padding:1rem 1.4rem;display:flex;align-items:center;gap:1rem;margin-top:1.2rem}
+.cta-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cta-body{flex:1;color:#fff;min-width:0}
+.cta-title{font-size:.86rem;font-weight:700;margin-bottom:.12rem}
+.cta-sub{font-size:.71rem;opacity:.82}
+.cta-btn{background:#fff;color:var(--red);border:none;padding:.5rem 1.1rem;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:.35rem;flex-shrink:0}
+.cta-btn:hover{opacity:.9}
+.cta-deco{font-size:1.8rem;flex-shrink:0;opacity:.5}
+
+/* ── PERF 6-COL KPIS ── */
+.perf-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:.65rem;margin-bottom:1rem}
+.perf-kpi{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:.85rem 1rem;box-shadow:var(--shadow);min-width:0}
+.perf-kpi-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:.5rem}
+.perf-kpi-label{font-size:.62rem;color:var(--muted);font-weight:500;margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.perf-kpi-value{font-size:1.35rem;font-weight:700;line-height:1;margin-bottom:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.perf-kpi-trend{font-size:.65rem;font-weight:600;color:var(--green)}
+.perf-kpi-trend.down{color:var(--red)}
+.perf-kpi.top-perf{border-color:rgba(240,107,113,.2);background:var(--light)}
+.top-perf-dish{display:flex;align-items:center;gap:.5rem;margin-top:.35rem;min-width:0}
+.top-perf-thumb{width:30px;height:30px;border-radius:7px;background:#f5f5f5;flex-shrink:0;overflow:hidden;object-fit:cover}
+.top-perf-info{min-width:0;flex:1}
+.top-perf-name{font-size:.7rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.top-perf-rate{font-size:.62rem;color:var(--muted);white-space:nowrap}
+
+/* ── PERF 5-COL TABLES ── */
+.perf-tables{display:grid;grid-template-columns:repeat(5,1fr);gap:.65rem;margin-bottom:1rem}
+.perf-tbl{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.perf-tbl-head{display:flex;align-items:center;gap:.45rem;padding:.75rem .9rem;border-bottom:1px solid var(--border)}
+.perf-tbl-title{font-size:.75rem;font-weight:700;flex:1}
+.perf-dish-row{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border-bottom:1px solid rgba(0,0,0,.04)}
+.perf-dish-row:last-child{border-bottom:none}
+.perf-dish-rank{font-size:.65rem;font-weight:700;color:var(--subtle);width:14px;flex-shrink:0;text-align:center}
+.perf-dish-thumb{width:28px;height:28px;border-radius:6px;background:#f5f5f5;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.perf-dish-thumb img{width:100%;height:100%;object-fit:cover}
+.perf-dish-name{flex:1;font-size:.72rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.perf-dish-metric{font-size:.67rem;font-weight:600;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.perf-dish-metric.ar{color:var(--purple)}
+.perf-dish-metric.up{color:var(--green)}
+.perf-dish-metric.red{color:var(--red)}
+.perf-tbl-footer{padding:.55rem .85rem;border-top:1px solid var(--border)}
+.perf-tbl-footer a{font-size:.68rem;font-weight:600;color:var(--red);text-decoration:none}
+.perf-tbl-footer a:hover{text-decoration:underline}
+
+/* ── PERF SUMMARY PANEL ── */
+.perf-summary-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.1rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.perf-summary-row:last-child{border-bottom:none}
+.perf-summary-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:.5rem}
+.perf-summary-label{display:flex;align-items:center;gap:.4rem;font-size:.74rem;color:var(--muted);flex:1}
+.perf-summary-right{display:flex;align-items:center;gap:.5rem}
+.perf-summary-val{font-size:.8rem;font-weight:700}
+.perf-summary-trend{font-size:.66rem;font-weight:600;color:var(--green)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty svg{stroke:var(--subtle);margin:0 auto .8rem;display:block}
+.empty-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.empty-sub{font-size:.76rem}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <img src="logo1.png" alt="VistaGusto" class="sidebar-logo" style="height:38px;display:block;margin-bottom:.7rem">
+    <div class="restaurant-chip">
+      <div class="restaurant-chip-dot"></div>
+      <div>
+        <div class="restaurant-name" id="sidebarRestName"></div>
+        <div class="restaurant-sub">myvistagusto.com</div>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="showSection('overview',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Overview
+    </button>
+    <button class="nav-item" onclick="showSection('menu',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Menu
+    </button>
+    <button class="nav-item" onclick="showSection('performance',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Performance
+    </button>
+    <button class="nav-item" onclick="showSection('tickets',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Tickets & Support
+      <span class="nav-badge" id="ticketBadge" style="display:none">0</span>
+    </button>
+    <button class="nav-item" onclick="showSection('subscription',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Subscription
+    </button>
+    <button class="nav-item" onclick="showSection('settings',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-avatar" id="userAvatarSidebar">LP</div>
+      <div class="user-info">
+        <div class="user-name" id="userNameSidebar">Louis Park</div>
+        <div class="user-role">Restaurant manager</div>
+      </div>
+      <button class="btn-logout" onclick="logout()" title="Sign out">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="topbarTitle">Welcome</div>
+      <div class="topbar-sub" id="topbarSub">Here's an overview of your menu's activity</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="topbarDate">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span id="topbarDateText">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ OVERVIEW ══ -->
+    <section class="section active" id="sec-overview">
+
+      <!-- 4 KPI Cards -->
+      <div class="ov-kpis">
+        <div class="ov-kpi">
+          <div class="ov-kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M16 21h.01"/><path d="M21 21h.01"/></svg></div>
+          <div class="ov-kpi-body">
+            <div class="ov-kpi-label">QR Scans today</div>
+            <div class="ov-kpi-value" id="kpi-scans">—</div>
+            <div class="ov-kpi-trend up" id="kpi-scans-trend">—</div>
+          </div>
+        </div>
+        <div class="ov-kpi">
+          <div class="ov-kpi-icon" style="background:#f0fdf4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div class="ov-kpi-body">
+            <div class="ov-kpi-label">QR Scans this week</div>
+            <div class="ov-kpi-value" id="kpi-scans-week">—</div>
+            <div class="ov-kpi-trend up" id="kpi-scans-week-trend">—</div>
+          </div>
+        </div>
+        <div class="ov-kpi">
+          <div class="ov-kpi-icon" style="background:#ede9fe"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="ov-kpi-body">
+            <div class="ov-kpi-label">Menu views (total)</div>
+            <div class="ov-kpi-value" id="kpi-views">—</div>
+            <div class="ov-kpi-trend up" id="kpi-views-trend">—</div>
+          </div>
+        </div>
+        <div class="ov-kpi">
+          <div class="ov-kpi-icon" style="background:#fff7ed"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="ov-kpi-body">
+            <div class="ov-kpi-label">Open tickets</div>
+            <div class="ov-kpi-value" id="kpi-tickets-count">—</div>
+            <div class="ov-kpi-trend warn" id="kpi-tickets-trend" style="display:none">awaiting reply</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart + Top viewed dishes -->
+      <div class="ov-mid">
+        <div class="ov-card">
+          <div class="ov-card-header">
+            <div class="ov-card-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              QR Scan evolution
+            </div>
+            <select class="search-input" style="font-size:.72rem;padding:.28rem .65rem" onchange="setChartFilter(this.value)">
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+            </select>
+          </div>
+          <div style="padding:1rem 1.1rem"><div style="position:relative;height:200px"><canvas id="scanChart"></canvas></div></div>
+        </div>
+
+        <div class="ov-card">
+          <div class="ov-card-header">
+            <div class="ov-card-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Most viewed dishes
+            </div>
+          </div>
+          <div id="topDishesList"></div>
+          <a href="#" class="ov-view-all" onclick="showSection('menu',document.querySelectorAll('.nav-item')[1]);return false">View all dishes →</a>
+        </div>
+      </div>
+
+      <!-- Bottom 3 columns -->
+      <div class="ov-bot">
+        <div class="ov-card">
+          <div class="ov-card-header">
+            <div class="ov-card-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              Most viewed in AR
+            </div>
+          </div>
+          <div id="topArDishes"></div>
+          <a href="#" class="ov-view-all" onclick="showSection('performance',document.querySelectorAll('.nav-item')[2]);return false">View all →</a>
+        </div>
+
+        <div class="ov-card">
+          <div class="ov-card-header">
+            <div class="ov-card-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Performance summary
+            </div>
+          </div>
+          <div class="ov-perf-row"><span class="ov-perf-label">QR Scans today</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-scans">—</span><span class="ov-perf-trend" id="ps-scans-trend"></span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">QR Scans this week</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-week">—</span><span class="ov-perf-trend" id="ps-week-trend"></span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">Menu views (total)</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-views">—</span><span class="ov-perf-trend" id="ps-views-trend"></span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">Dishes viewed in AR</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-ar">—</span></div></div>
+          <div class="ov-perf-row"><span class="ov-perf-label">3D views</span><div class="ov-perf-right"><span class="ov-perf-val" id="ps-3d">—</span></div></div>
+        </div>
+
+      </div>
+
+
+    </section>
+
+    <!-- ══ MENU ══ -->
+    <section class="section" id="sec-menu">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.7rem">
+        <div>
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:.1rem">Menu Management</h2>
+          <div style="font-size:.72rem;color:var(--muted)">Edit your dishes, prices and descriptions. Changes are saved instantly.</div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <a class="btn btn-ghost btn-sm" href="le-petit-marguery.html?internal=1" target="_blank">View public menu</a>
+          <button class="btn btn-primary btn-sm" onclick="openModal('addDishModal')">+ Add dish</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterDishes(this,'all')">All dishes</button>
+        <button class="filter-btn" onclick="filterDishes(this,'food')">Food</button>
+        <button class="filter-btn" onclick="filterDishes(this,'drinks')">Drinks</button>
+        <input class="search-input" type="text" placeholder="Search dishes…" style="min-width:180px;margin-left:auto" oninput="searchDishes(this.value)">
+      </div>
+
+      <div class="card" style="overflow:hidden">
+        <div class="table-wrap">
+          <table class="data-table" style="min-width:700px">
+            <thead><tr><th style="width:44px"></th><th>Name</th><th>Category</th><th>Price</th><th>3D</th><th>AR</th><th>Visible</th><th>Actions</th></tr></thead>
+            <tbody id="dishTableBody"></tbody>
+          </table>
+        </div>
+        <div style="padding:.7rem 1rem;font-size:.7rem;color:var(--muted);border-top:1px solid var(--border)" id="dishCount"></div>
+      </div>
+    </section>
+
+    <!-- ══ EDIT DISH ══ -->
+    <section class="section" id="sec-edit-dish">
+      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem">
+        <button class="btn btn-ghost btn-sm" onclick="showSection('menu', document.querySelectorAll('.nav-item')[1])">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to menu
+        </button>
+        <h2 style="font-size:1rem;font-weight:700">Edit Dish</h2>
+        <div style="margin-left:auto;display:flex;gap:.5rem">
+          <button class="btn btn-ghost btn-sm" onclick="showSection('menu', document.querySelectorAll('.nav-item')[1])">Cancel</button>
+          <button class="btn btn-primary btn-sm" onclick="saveEditDish()">Save changes</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:1rem;align-items:start">
+
+        <!-- LEFT: dish info -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="settings-section">
+            <div class="settings-title">General Information</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
+              <div class="fg"><label>Dish name</label><input type="text" id="editDishName" placeholder="e.g. Truffle Pizza"></div>
+              <div class="fg"><label>Category</label>
+                <select id="editDishCategory">
+                  <option>Starters</option>
+                  <option>Mains</option>
+                  <option>Desserts</option>
+                  <option>Drinks</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg"><label>Description</label><textarea id="editDishDesc" rows="3" placeholder="Describe the dish, ingredients, allergens…"></textarea></div>
+            <div class="fg" style="max-width:180px"><label>Price (€)</label><input type="number" id="editDishPrice" placeholder="0.00" step="0.01" min="0"></div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Availability & Status</div>
+            <div style="display:flex;flex-direction:column;gap:.8rem">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:.8rem;font-weight:600">Visible on menu</div>
+                  <div style="font-size:.7rem;color:var(--muted)">Customers can see this dish</div>
+                </div>
+                <label class="toggle"><input type="checkbox" id="editDishActive"><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: photo -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="settings-section">
+            <div class="settings-title">Dish Photo</div>
+            <div id="editPhotoPreview" style="margin-bottom:.8rem"></div>
+            <div class="logo-upload" onclick="document.getElementById('editPhotoInput').click()">
+              <input type="file" id="editPhotoInput" accept="image/*" style="display:none" onchange="previewEditPhoto(this)">
+              <div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Upload new photo</div>
+              <div style="font-size:.67rem;color:var(--muted)">JPG or PNG · Max 5 MB</div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">3D & AR Models</div>
+            <div style="font-size:.73rem;color:var(--muted);line-height:1.6;margin-bottom:.8rem">3D and AR models are created and managed by the VistaGusto team. Open a ticket to request a new model.</div>
+            <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" onclick="showSection('tickets', document.querySelectorAll('.nav-item')[3])">
+              Request a 3D model
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ PERFORMANCE ══ -->
+    <section class="section" id="sec-performance">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.7rem">
+        <div>
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:.1rem">Performance</h2>
+          <div style="font-size:.72rem;color:var(--muted)">Track your customers' engagement and optimise your menu.</div>
+        </div>
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap;align-items:center">
+          <button class="filter-btn" onclick="setPerfRange(this,'today')">Today</button>
+          <button class="filter-btn" onclick="setPerfRange(this,'3d')">3 days</button>
+          <button class="filter-btn active" onclick="setPerfRange(this,'7d')">7 days</button>
+          <button class="filter-btn" onclick="setPerfRange(this,'14d')">14 days</button>
+        </div>
+      </div>
+
+      <!-- 6 KPI cards -->
+      <div class="perf-kpis">
+        <div class="perf-kpi">
+          <div class="perf-kpi-icon" style="background:var(--light)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M16 21h.01"/><path d="M21 21h.01"/></svg></div>
+          <div class="perf-kpi-label">QR Scans</div>
+          <div class="perf-kpi-value" id="p-qr">—</div>
+          <div class="perf-kpi-trend" id="p-qr-trend"></div>
+        </div>
+        <div class="perf-kpi">
+          <div class="perf-kpi-icon" style="background:#ede9fe"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="perf-kpi-label">Menu views</div>
+          <div class="perf-kpi-value" id="p-menu">—</div>
+          <div class="perf-kpi-trend" id="p-menu-trend"></div>
+        </div>
+        <div class="perf-kpi">
+          <div class="perf-kpi-icon" style="background:#f0fdf4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>
+          <div class="perf-kpi-label">Dish clicks</div>
+          <div class="perf-kpi-value" id="p-clicks">—</div>
+          <div class="perf-kpi-trend" id="p-clicks-trend"></div>
+        </div>
+        <div class="perf-kpi">
+          <div class="perf-kpi-icon" style="background:#ede9fe"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div class="perf-kpi-label">AR views</div>
+          <div class="perf-kpi-value" id="p-ar">—</div>
+          <div class="perf-kpi-trend" id="p-ar-trend"></div>
+        </div>
+        <div class="perf-kpi">
+          <div class="perf-kpi-icon" style="background:var(--amber-bg)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="perf-kpi-label">Engagement rate</div>
+          <div class="perf-kpi-value" id="p-rate">—</div>
+          <div class="perf-kpi-trend" id="p-rate-trend"></div>
+        </div>
+        <div class="perf-kpi top-perf">
+          <div class="perf-kpi-label">Top performer</div>
+          <div class="top-perf-dish">
+            <div class="top-perf-thumb" id="p-top-thumb" style="display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg></div>
+            <div class="top-perf-info">
+              <span class="top-perf-name" id="p-top-name">—</span>
+              <div class="top-perf-rate" id="p-top-rate"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart + Summary -->
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:.9rem;margin-bottom:.9rem">
+        <div class="chart-card">
+          <div class="chart-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span>QR Scan evolution</span>
+          </div>
+          <div class="chart-wrap" style="height:200px"><canvas id="perfScanChart"></canvas></div>
+        </div>
+        <div class="card" style="overflow:hidden">
+          <div class="card-header"><div class="card-title">Period summary</div></div>
+          <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:var(--light)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/></svg></span>QR Scans</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-qr">—</span><span class="perf-summary-trend" id="ps-qr-trend"></span></div></div>
+          <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#ede9fe"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>Menu views</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-menu">—</span><span class="perf-summary-trend" id="ps-menu-trend"></span></div></div>
+          <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#f0fdf4"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/></svg></span>Dish clicks</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-clicks">—</span><span class="perf-summary-trend" id="ps-clicks-trend"></span></div></div>
+          <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#ede9fe"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></span>AR views</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-ar-val">—</span><span class="perf-summary-trend" id="ps-ar-trend"></span></div></div>
+          <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:var(--amber-bg)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>Engagement rate</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-rate-val">—</span><span class="perf-summary-trend" id="ps-rate-trend"></span></div></div>
+        </div>
+      </div>
+
+      <!-- 5 dish tables -->
+      <div class="perf-tables">
+        <div class="perf-tbl">
+          <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span class="perf-tbl-title">Most viewed</span></div>
+          <div id="pt-top-views"></div>
+          <div class="perf-tbl-footer"><a href="#" onclick="showFullRanking('views');return false">View all →</a></div>
+        </div>
+        <div class="perf-tbl">
+          <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span class="perf-tbl-title">Most viewed in AR</span></div>
+          <div id="pt-top-ar"></div>
+          <div class="perf-tbl-footer"><a href="#" onclick="showFullRanking('ar');return false">View all →</a></div>
+        </div>
+        <div class="perf-tbl">
+          <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span class="perf-tbl-title">Least viewed</span></div>
+          <div id="pt-low-views"></div>
+          <div class="perf-tbl-footer"><a href="#" onclick="showFullRanking('low');return false">View all →</a></div>
+        </div>
+        <div class="perf-tbl">
+          <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span class="perf-tbl-title">Trending</span></div>
+          <div id="pt-trending"></div>
+          <div class="perf-tbl-footer"><a href="#" onclick="showFullRanking('trending');return false">View all →</a></div>
+        </div>
+        <div class="perf-tbl">
+          <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="perf-tbl-title">Engagement rate</span></div>
+          <div id="pt-engagement"></div>
+          <div class="perf-tbl-footer"><a href="#" onclick="showFullRanking('engagement');return false">View all →</a></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══ TICKETS ══ -->
+    <section class="section" id="sec-tickets">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.7rem">
+        <div>
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:.1rem">Tickets & Support</h2>
+          <div style="font-size:.72rem;color:var(--muted)">Contact the VistaGusto team for any request.</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('newTicketModal')">+ New ticket</button>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterTickets(this,'all')">All</button>
+        <button class="filter-btn" onclick="filterTickets(this,'open')">Open</button>
+        <button class="filter-btn" onclick="filterTickets(this,'waiting')">Waiting for reply</button>
+        <button class="filter-btn" onclick="filterTickets(this,'resolved')">Resolved</button>
+      </div>
+      <div class="tickets-layout">
+        <div class="ticket-list">
+          <div class="ticket-list-header">
+            <div style="font-size:.75rem;font-weight:700">My Tickets</div>
+          </div>
+          <div class="ticket-items" id="ticketList"></div>
+        </div>
+        <div class="chat-panel">
+          <div class="chat-header">
+            <div class="chat-header-title" id="chatSubject">Select a ticket</div>
+            <div id="chatMeta"></div>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="empty" style="padding:2rem"><div style="font-size:.78rem">Select a ticket to view the conversation</div></div>
+          </div>
+          <div class="chat-input-wrap">
+            <div class="chat-input-icons">
+              <input type="file" id="chatFileInput" style="display:none" onchange="sendFileMessage(this)">
+              <button class="chat-icon-btn" onclick="document.getElementById('chatFileInput').click()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+            </div>
+            <textarea class="chat-input" id="chatInput" rows="1" placeholder="Write a message…" onkeydown="sendMessage(event)"></textarea>
+            <button class="chat-send-btn" onclick="sendMessageBtn()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SUBSCRIPTION ══ -->
+    <section class="section" id="sec-subscription">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.7rem">
+        <div>
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:.1rem">Subscription & Billing</h2>
+          <div style="font-size:.72rem;color:var(--muted)">Manage your subscription and view your invoices.</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('Contacting billing team')">Contact billing</button>
+      </div>
+
+      <!-- Plan summary top row -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem">
+        <div class="kpi-card"><div class="kpi-label">Current plan</div><div class="kpi-value" style="font-size:1.3rem" id="subPlan">—</div><div class="kpi-sub"><span class="badge badge-active" id="subStatus">—</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Monthly price</div><div class="kpi-value" style="font-size:1.3rem" id="subPrice">—</div><div class="kpi-sub">billed monthly</div></div>
+        <div class="kpi-card"><div class="kpi-label">Next renewal</div><div class="kpi-value" style="font-size:1.1rem" id="subRenewal">—</div><div class="kpi-sub">auto-renews</div></div>
+        <div class="kpi-card"><div class="kpi-label">Payment method</div><div class="kpi-value" style="font-size:1rem;margin-top:.25rem" id="subPayment">—</div><div class="kpi-sub"><a href="#" style="color:var(--red);font-size:.68rem;font-weight:600" onclick="showToast('Redirecting to billing portal')">Update →</a></div></div>
+      </div>
+
+      <div class="sub-grid">
+        <div class="card" style="overflow:hidden">
+          <div class="card-header"><div class="card-title" id="subPlanTitle">Your VistaGusto Plan</div></div>
+          <div style="padding:1rem 1.2rem">
+            <div class="plan-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited digital menu</div>
+            <div class="plan-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 20 3D dish models</div>
+            <div class="plan-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Augmented reality (AR)</div>
+            <div class="plan-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Priority support</div>
+            <div class="plan-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Real-time analytics</div>
+            <div style="margin-top:1rem">
+              <button class="btn btn-outline btn-sm" onclick="showToast('Redirecting to plan options')">Change plan</button>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="overflow:hidden">
+          <div class="card-header"><div class="card-title">Payment history</div></div>
+          <div id="invoiceList">
+            <div class="invoice-row"><span style="color:var(--muted)">12 Jun 2026</span><span>#VG-2026-031</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
+            <div class="invoice-row"><span style="color:var(--muted)">12 May 2026</span><span>#VG-2026-028</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
+            <div class="invoice-row"><span style="color:var(--muted)">12 Apr 2026</span><span>#VG-2026-024</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
+            <div class="invoice-row"><span style="color:var(--muted)">12 Mar 2026</span><span>#VG-2026-019</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SETTINGS ══ -->
+    <section class="section" id="sec-settings">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <h2 style="font-size:1rem;font-weight:700">Restaurant Settings</h2>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('Support opened')">Contact support</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start">
+
+        <!-- LEFT COLUMN -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+
+          <div class="settings-section">
+            <div class="settings-title">Restaurant Logo</div>
+            <div class="logo-upload" onclick="document.getElementById('logoInput').click()">
+              <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewLogo(this)">
+              <div id="logoPreview" style="margin-bottom:.7rem">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </div>
+              <div style="font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Click to upload your logo</div>
+              <div style="font-size:.68rem;color:var(--muted)">PNG or JPG · 512×512px recommended · Max 2 MB</div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Restaurant Info</div>
+            <div class="fg"><label>Restaurant name</label><input type="text" id="restName" placeholder="Your restaurant name"></div>
+            <div class="fg"><label>Phone number</label><input type="tel" id="restPhone" placeholder="+33 1 23 45 67 89"></div>
+            <div class="fg"><label>Address</label><input type="text" id="restAddress" placeholder="12 Rue de la Paix, Paris"></div>
+            <button class="btn btn-primary btn-sm" onclick="saveRestaurantInfo()">Save changes</button>
+          </div>
+
+          <div class="settings-section" style="border:1px solid rgba(240,107,113,.2);background:rgba(240,107,113,.02)">
+            <div class="settings-title" style="color:var(--red)">Danger zone</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-bottom:.9rem;line-height:1.6">These actions are irreversible. Please be certain before proceeding.</div>
+            <div style="display:flex;flex-direction:column;gap:.5rem">
+              <button class="btn btn-danger btn-sm" onclick="showToast('Contact support to deactivate your account')">Deactivate account</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+
+          <div class="settings-section">
+            <div class="settings-title">Account Email</div>
+            <div style="font-size:.74rem;color:var(--muted);margin-bottom:.85rem;line-height:1.55">A verification link will be sent to the new address before the change takes effect.</div>
+            <div class="fg"><label>Current email</label><input type="email" id="currentEmail" readonly style="background:#f9f9f9;color:var(--muted)"></div>
+            <div class="fg"><label>New email address</label><input type="email" id="newEmail" placeholder="new@email.com"></div>
+            <button class="btn btn-primary btn-sm" onclick="updateEmail()">Save new email</button>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Change Password</div>
+            <div style="font-size:.74rem;color:var(--muted);margin-bottom:.85rem;line-height:1.55">Your password is encrypted and never visible to the VistaGusto team.</div>
+            <div class="fg"><label>New password</label><input type="password" id="newPassword" placeholder="••••••••" oninput="checkPassword(this.value)"></div>
+            <div style="margin-bottom:.9rem;display:flex;flex-direction:column;gap:.2rem">
+              <div class="password-rule" id="rule-length"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg>At least 8 characters</div>
+              <div class="password-rule" id="rule-upper"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg>One uppercase letter</div>
+              <div class="password-rule" id="rule-number"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg>One number</div>
+            </div>
+            <div class="fg"><label>Confirm password</label><input type="password" id="confirmPassword" placeholder="••••••••"></div>
+            <button class="btn btn-primary btn-sm" onclick="updatePassword()">Update password</button>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Your QR Code</div>
+            <div style="font-size:.74rem;color:var(--muted);margin-bottom:.85rem;line-height:1.55">Place this QR code on your tables. Customers scan it to view your 3D menu.</div>
+            <div style="background:#f9f8f7;border-radius:10px;padding:1.2rem;display:flex;align-items:center;gap:1rem">
+              <div style="width:72px;height:72px;background:#1a1a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M16 21h.01"/><path d="M21 21h.01"/></svg>
+              </div>
+              <div>
+                <div style="font-size:.78rem;font-weight:600;margin-bottom:.3rem">le-petit-marguery</div>
+                <div style="font-size:.69rem;color:var(--muted);margin-bottom:.6rem">myvistagusto.com/le-petit-marguery</div>
+                <div style="display:flex;gap:.4rem">
+                  <button class="btn btn-primary btn-sm" onclick="showToast('QR Code downloaded','success')">Download</button>
+                  <button class="btn btn-ghost btn-sm" onclick="showToast('Link copied','success')">Copy link</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- MODAL: Full Ranking -->
+<div class="modal-overlay" id="rankingModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-title" id="rankingTitle">Full ranking</div>
+    <button class="modal-close" onclick="closeModal('rankingModal')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div id="rankingList" style="max-height:65vh;overflow-y:auto;margin-top:.5rem"></div>
+  </div>
+</div>
+
+<!-- MODAL: New Ticket -->
+<div class="modal-overlay" id="newTicketModal">
+  <div class="modal">
+    <div class="modal-title">New Support Ticket</div>
+    <button class="modal-close" onclick="closeModal('newTicketModal')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <form onsubmit="submitTicket(event)">
+      <div class="fg"><label>Subject</label><input type="text" id="ticketSubject" placeholder="Describe your issue briefly" required></div>
+      <div class="fg"><label>Type</label>
+        <select id="ticketType">
+          <option>Technical Issue</option>
+          <option>3D Request</option>
+          <option>Billing</option>
+          <option>General Support</option>
+        </select>
+      </div>
+      <div class="fg"><label>Message</label><textarea id="ticketMessage" rows="4" placeholder="Describe your request in detail…" required></textarea></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('newTicketModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Send ticket</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: Add Dish -->
+<div class="modal-overlay" id="addDishModal">
+  <div class="modal">
+    <div class="modal-title">Add New Dish</div>
+    <button class="modal-close" onclick="closeModal('addDishModal')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <form onsubmit="addDish(event)">
+      <div class="fg"><label>Dish name</label><input type="text" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
+        <div class="fg"><label>Category</label><select><option>Starter</option><option>Main</option><option>Dessert</option><option>Drink</option></select></div>
+        <div class="fg"><label>Price</label><input type="text" placeholder="€0.00"></div>
+      </div>
+      <div class="fg"><label>Description</label><textarea rows="2"></textarea></div>
+      <div class="fg"><label>Photo</label><input type="file" accept="image/*"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('addDishModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add dish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── SUPABASE ── */
+const SUPABASE_URL = 'https://mmqddxxfgcebxlzotahc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tcWRkeHhmZ2NlYnhsem90YWhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NTUwMTYsImV4cCI6MjA5NzEzMTAxNn0.dpRjp2rZxRpEXqfuzXalPrAKpUeyLOPLmlwbE56NKjU';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ── STATE ── */
+let currentRestaurant = null;
+let dishes = [];
+let dishFilter = 'all';
+let dishSearch = '';
+let tickets = [];
+let currentTicket = -1;
+let currentEditDish = null;
+let perfEnriched = [];
+
+/* ── DISHES (loaded from Supabase) ── */
+let demoDishes = [];
+
+let demoTickets = [];
+
+/* ── NAVIGATION ── */
+function showSection(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const titles = {
+    overview:'Overview', menu:'Menu Management',
+    performance:'Performance', tickets:'Tickets & Support',
+    subscription:'Subscription & Billing', settings:'Settings'
+  };
+  const subs = {
+    overview:"Here's an overview of your menu's activity",
+    menu:'Edit your dishes and manage your menu',
+    performance:'Track engagement and optimise your menu',
+    tickets:'Contact the VistaGusto team for any request',
+    subscription:'Manage your subscription and invoices',
+    settings:'Update your restaurant profile'
+  };
+  document.getElementById('topbarTitle').textContent = name === 'overview'
+    ? 'Welcome, ' + (currentRestaurant?.name || '') + ''
+    : titles[name];
+  document.getElementById('topbarSub').textContent = subs[name] || '';
+  if (name === 'overview') loadOverview();
+  if (name === 'menu') loadDishes();
+  if (name === 'performance') loadPerformance('7d');
+  if (name === 'tickets') loadTickets();
+  if (name === 'subscription') loadSubscription();
+}
+
+/* ── OVERVIEW ── */
+let scanChart = null;
+
+function trendStr(curr, prev) {
+  if (!prev || prev === 0) return null;
+  const pct = Math.round(((curr - prev) / prev) * 100);
+  return { pct, up: pct >= 0 };
+}
+function setTrendEl(id, curr, prev, label) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const t = trendStr(curr, prev);
+  if (!t) { el.textContent = label || ''; el.className = el.className.replace(/ up| down/g,''); return; }
+  el.textContent = (t.up ? '↑ +' : '↓ ') + Math.abs(t.pct) + '% ' + (label || '');
+  el.className = el.className.replace(/ up| down/g,'') + (t.up ? ' up' : ' down');
+}
+function dishThumb(d, size = 36) {
+  return d?.photo_url
+    ? `<img src="${d.photo_url}" style="width:${size}px;height:${size}px;border-radius:${size>30?8:6}px;object-fit:cover;flex-shrink:0">`
+    : `<div style="width:${size}px;height:${size}px;border-radius:${size>30?8:6}px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg></div>`;
+}
+
+async function loadOverview(range = '7d') {
+  const days = range === '30d' ? 30 : 7;
+  const now = new Date();
+  const periodStart = new Date(now - days * 86400000);
+  const prevStart   = new Date(now - days * 2 * 86400000);
+  const todayStr    = now.toISOString().split('T')[0];
+  const yesterdayStr = new Date(now - 86400000).toISOString().split('T')[0];
+
+  const fmt = d => d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+  document.getElementById('topbarDateText').textContent = fmt(periodStart) + ' — ' + fmt(now);
+
+  if (demoDishes.length === 0) await loadDishes();
+
+  const [{ data: allEvents }, { count: openTickets }, { data: waitingTickets }] = await Promise.all([
+    db.from('analytics_events').select('event_type, dish_id, created_at')
+      .eq('restaurant_id', RESTAURANT_ID).gte('created_at', prevStart.toISOString()),
+    db.from('tickets').select('*', { count: 'exact', head: true })
+      .eq('restaurant_id', RESTAURANT_ID).in('status', ['Open', 'Waiting', 'In Progress']),
+    db.from('tickets').select('*', { count: 'exact', head: true })
+      .eq('restaurant_id', RESTAURANT_ID).eq('status', 'Waiting')
+  ]);
+
+  const events = allEvents || [];
+  const curr = events.filter(e => e.created_at >= periodStart.toISOString());
+  const prev = events.filter(e => e.created_at < periodStart.toISOString());
+  const todayEvt = events.filter(e => e.created_at.startsWith(todayStr));
+  const yestEvt  = events.filter(e => e.created_at.startsWith(yesterdayStr));
+
+  const cnt = (arr, type) => arr.filter(e => e.event_type === type).length;
+
+  const scansToday  = cnt(todayEvt, 'qr_scan') || cnt(todayEvt, 'menu_view');
+  const scansPrev   = cnt(yestEvt, 'qr_scan') || cnt(yestEvt, 'menu_view');
+  const scansWeek   = cnt(curr, 'qr_scan') || cnt(curr, 'menu_view');
+  const scansWkPrev = cnt(prev, 'qr_scan') || cnt(prev, 'menu_view');
+  const menuViews   = cnt(curr, 'menu_view');
+  const menuPrev    = cnt(prev, 'menu_view');
+  const arViews     = cnt(curr, 'ar_view');
+  const views3d     = cnt(curr, '3d_view');
+
+  // KPI cards
+  document.getElementById('kpi-scans').textContent = scansToday.toLocaleString();
+  document.getElementById('kpi-scans-week').textContent = scansWeek.toLocaleString();
+  document.getElementById('kpi-views').textContent = menuViews.toLocaleString();
+  document.getElementById('kpi-tickets-count').textContent = openTickets || 0;
+  setTrendEl('kpi-scans-trend', scansToday, scansPrev, 'vs yesterday');
+  setTrendEl('kpi-scans-week-trend', scansWeek, scansWkPrev, `vs previous ${days}d`);
+  setTrendEl('kpi-views-trend', menuViews, menuPrev, `vs previous ${days}d`);
+  const tickTrend = document.getElementById('kpi-tickets-trend');
+  if (openTickets > 0) { tickTrend.style.display = 'flex'; tickTrend.textContent = (waitingTickets?.length || 0) + ' awaiting reply'; }
+
+  // Performance summary
+  document.getElementById('ps-scans').textContent = scansToday.toLocaleString();
+  document.getElementById('ps-week').textContent  = scansWeek.toLocaleString();
+  document.getElementById('ps-views').textContent = menuViews.toLocaleString();
+  document.getElementById('ps-ar').textContent    = arViews.toLocaleString();
+  document.getElementById('ps-3d').textContent    = views3d.toLocaleString();
+  setTrendEl('ps-scans-trend', scansToday, scansPrev, 'vs yesterday');
+  setTrendEl('ps-week-trend', scansWeek, scansWkPrev, `vs prev`);
+  setTrendEl('ps-views-trend', menuViews, menuPrev, 'vs prev');
+
+  // Dish-level view maps from analytics
+  const dishViewMap = {}, dishArMap = {};
+  curr.forEach(e => {
+    if (!e.dish_id) return;
+    if (e.event_type === 'dish_view') dishViewMap[e.dish_id] = (dishViewMap[e.dish_id] || 0) + 1;
+    if (e.event_type === 'ar_view')   dishArMap[e.dish_id]   = (dishArMap[e.dish_id]   || 0) + 1;
+  });
+
+  // Top viewed dishes (by dish_view events)
+  const topByViews = demoDishes
+    .map(d => ({ ...d, views: dishViewMap[d.id] || 0 }))
+    .sort((a, b) => b.views - a.views).slice(0, 5);
+
+  document.getElementById('topDishesList').innerHTML = topByViews.length === 0
+    ? `<div style="padding:1rem;text-align:center;font-size:.75rem;color:var(--muted)">No data yet</div>`
+    : topByViews.map((d, i) => `
+      <div class="ov-dish-row">
+        ${dishThumb(d, 38)}
+        <div class="ov-dish-rank">${i+1}</div>
+        <div class="ov-dish-name">${d.name}</div>
+        <div class="ov-dish-badge">${d.views > 0 ? d.views + ' views' : '—'}</div>
+      </div>`).join('');
+
+  // Top AR dishes (by ar_view events per dish_id)
+  const topByAr = demoDishes
+    .map(d => ({ ...d, arViews: dishArMap[d.id] || 0 }))
+    .filter(d => d.has_ar || d.arViews > 0)
+    .sort((a, b) => b.arViews - a.arViews).slice(0, 5);
+
+  const arEl = document.getElementById('topArDishes');
+  arEl.innerHTML = topByAr.length === 0
+    ? `<div style="padding:1rem;text-align:center;font-size:.75rem;color:var(--muted)">No AR dishes yet</div>`
+    : topByAr.map((d, i) => `
+      <div class="ov-dish-row">
+        ${dishThumb(d, 38)}
+        <div class="ov-dish-rank">${i+1}</div>
+        <div class="ov-dish-name">${d.name}</div>
+        <div class="ov-dish-badge ar">${d.arViews > 0 ? d.arViews + ' AR' : '—'}</div>
+      </div>`).join('');
+
+
+  // Chart
+  const labels = [], scanData = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now - i * 86400000);
+    labels.push(d.toLocaleDateString('en-GB', { day:'numeric', month:'short' }));
+    const ds = d.toISOString().split('T')[0];
+    scanData.push(curr.filter(e => (e.event_type === 'qr_scan' || e.event_type === 'menu_view') && e.created_at.startsWith(ds)).length);
+  }
+
+  setTimeout(() => {
+    if (scanChart) { scanChart.destroy(); scanChart = null; }
+    scanChart = new Chart(document.getElementById('scanChart'), {
+      type: 'line',
+      data: { labels, datasets: [{ data: scanData, borderColor: '#E53935', borderWidth: 2.5, fill: true, backgroundColor: 'rgba(229,57,53,.07)', tension: .4, pointRadius: 3, pointBackgroundColor: '#E53935' }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+        scales: { x: { grid: { display: false }, ticks: { font: { family: 'Poppins', size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.05)' }, ticks: { font: { family: 'Poppins', size: 10 }, stepSize: 1 } } } }
+    });
+  }, 60);
+}
+
+let perfChart = null;
+function perfDishRow(d, i, metricHtml) {
+  return `<div class="perf-dish-row">
+    <span class="perf-dish-rank">${i+1}</span>
+    ${dishThumb(d, 28)}
+    <span class="perf-dish-name">${d.name}</span>
+    ${metricHtml}
+  </div>`;
+}
+async function loadPerformance(range) {
+  const days = range === 'today' ? 1 : range === '3d' ? 3 : range === '7d' ? 7 : 14;
+  const now = new Date();
+  const periodStart = new Date(now - days * 86400000).toISOString();
+  const prevStart   = new Date(now - days * 2 * 86400000).toISOString();
+
+  if (demoDishes.length === 0) await loadDishes();
+
+  const [{ data: currEvts }, { data: prevEvts }] = await Promise.all([
+    db.from('analytics_events').select('event_type, dish_id, created_at')
+      .eq('restaurant_id', RESTAURANT_ID).gte('created_at', periodStart).order('created_at'),
+    db.from('analytics_events').select('event_type, dish_id')
+      .eq('restaurant_id', RESTAURANT_ID).gte('created_at', prevStart).lt('created_at', periodStart)
+  ]);
+
+  const curr = currEvts || [];
+  const prev = prevEvts || [];
+  const cnt = (arr, type) => arr.filter(e => e.event_type === type).length;
+
+  const qrScans    = cnt(curr, 'qr_scan') || cnt(curr, 'menu_view');
+  const menuViews  = cnt(curr, 'menu_view');
+  const dishClicks = cnt(curr, 'dish_view');
+  const arViews    = cnt(curr, 'ar_view');
+  const arRate     = menuViews > 0 ? ((arViews / menuViews) * 100).toFixed(1) : '0.0';
+
+  const qrPrev    = cnt(prev, 'qr_scan') || cnt(prev, 'menu_view');
+  const menuPrev  = cnt(prev, 'menu_view');
+  const clicksPrev = cnt(prev, 'dish_view');
+  const arPrev    = cnt(prev, 'ar_view');
+  const arRatePrev = menuPrev > 0 ? (arPrev / menuPrev * 100) : 0;
+
+  const tStr = (c, p) => { const t = trendStr(c, p); return t ? `<span class="perf-kpi-trend${t.up ? '' : ' down'}">${t.up ? '↑ +' : '↓ '}${Math.abs(t.pct)}%</span>` : ''; };
+
+  // 6 KPI cards
+  document.getElementById('p-qr').textContent    = qrScans.toLocaleString();
+  document.getElementById('p-menu').textContent  = menuViews.toLocaleString();
+  document.getElementById('p-clicks').textContent = dishClicks.toLocaleString();
+  document.getElementById('p-ar').textContent    = arViews.toLocaleString();
+  document.getElementById('p-rate').textContent  = arRate + '%';
+  document.getElementById('p-qr-trend').innerHTML    = tStr(qrScans, qrPrev);
+  document.getElementById('p-menu-trend').innerHTML  = tStr(menuViews, menuPrev);
+  document.getElementById('p-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
+  document.getElementById('p-ar-trend').innerHTML    = tStr(arViews, arPrev);
+  document.getElementById('p-rate-trend').innerHTML  = tStr(parseFloat(arRate), arRatePrev);
+
+  // Period summary panel
+  document.getElementById('ps-qr').textContent     = qrScans.toLocaleString();
+  document.getElementById('ps-menu').textContent   = menuViews.toLocaleString();
+  document.getElementById('ps-clicks').textContent = dishClicks.toLocaleString();
+  document.getElementById('ps-ar-val').textContent = arViews.toLocaleString();
+  document.getElementById('ps-rate-val').textContent = arRate + '%';
+  document.getElementById('ps-qr-trend').innerHTML     = tStr(qrScans, qrPrev);
+  document.getElementById('ps-menu-trend').innerHTML   = tStr(menuViews, menuPrev);
+  document.getElementById('ps-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
+  document.getElementById('ps-ar-trend').innerHTML     = tStr(arViews, arPrev);
+  document.getElementById('ps-rate-trend').innerHTML   = tStr(parseFloat(arRate), arRatePrev);
+
+  // Dish-level maps
+  const dishViewMap = {}, dishArMap = {}, dishViewPrevMap = {}, dishArPrevMap = {};
+  curr.forEach(e => {
+    if (!e.dish_id) return;
+    if (e.event_type === 'dish_view') dishViewMap[e.dish_id] = (dishViewMap[e.dish_id] || 0) + 1;
+    if (e.event_type === 'ar_view')   dishArMap[e.dish_id]   = (dishArMap[e.dish_id]   || 0) + 1;
+  });
+  prev.forEach(e => {
+    if (!e.dish_id) return;
+    if (e.event_type === 'dish_view') dishViewPrevMap[e.dish_id] = (dishViewPrevMap[e.dish_id] || 0) + 1;
+    if (e.event_type === 'ar_view')   dishArPrevMap[e.dish_id]   = (dishArPrevMap[e.dish_id]   || 0) + 1;
+  });
+
+  perfEnriched = demoDishes.map(d => ({
+    ...d,
+    views:    dishViewMap[d.id] || 0,
+    arViews:  dishArMap[d.id] || 0,
+    prevViews: dishViewPrevMap[d.id] || 0,
+    engRate:  (dishViewMap[d.id] || 0) > 0 ? Math.round(((dishArMap[d.id] || 0) / dishViewMap[d.id]) * 100) : 0,
+    growth:   ((dishViewMap[d.id] || 0) - (dishViewPrevMap[d.id] || 0))
+  }));
+
+  // Top performer (highest dish views)
+  const topDish = [...perfEnriched].sort((a,b) => b.views - a.views)[0];
+  if (topDish) {
+    document.getElementById('p-top-name').textContent = topDish.name;
+    document.getElementById('p-top-rate').textContent = `${topDish.views} views · ${topDish.engRate}% AR`;
+    if (topDish.photo_url) {
+      document.getElementById('p-top-thumb').innerHTML = `<img src="${topDish.photo_url}" class="top-perf-thumb" style="width:32px;height:32px;object-fit:cover;border-radius:7px">`;
+    }
+  }
+
+  // Render 5 tables
+  const noData = `<div style="padding:.8rem;font-size:.72rem;color:var(--muted);text-align:center">No data yet</div>`;
+
+  // Most viewed
+  const topViews = [...perfEnriched].sort((a,b) => b.views - a.views).slice(0,5);
+  document.getElementById('pt-top-views').innerHTML = topViews[0]?.views > 0
+    ? topViews.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric red">${d.views} views</span>`)).join('')
+    : noData;
+
+  // Most viewed in AR — always show 5, sorted by AR views desc
+  const topAr = [...perfEnriched].sort((a,b) => b.arViews - a.arViews).slice(0,5);
+  document.getElementById('pt-top-ar').innerHTML = topAr.map((d,i) =>
+    perfDishRow(d, i, `<span class="perf-dish-metric ar">${d.arViews > 0 ? d.arViews + ' AR' : '0 AR'}</span>`)
+  ).join('') || noData;
+
+  // Least viewed (active dishes only, sorted ascending by views)
+  const lowViews = [...perfEnriched].filter(d => d.is_active).sort((a,b) => a.views - b.views).slice(0,5);
+  document.getElementById('pt-low-views').innerHTML = lowViews.length > 0
+    ? lowViews.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric">${d.views} views</span>`)).join('')
+    : noData;
+
+  // Trending (biggest positive growth vs previous period)
+  const trending = [...perfEnriched].sort((a,b) => b.growth - a.growth).slice(0,5);
+  document.getElementById('pt-trending').innerHTML = trending[0]?.growth > 0
+    ? trending.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric up">${d.growth > 0 ? '+' : ''}${d.growth}</span>`)).join('')
+    : noData;
+
+  // Engagement rate (ar_views / dish_views per dish)
+  const byEng = [...perfEnriched].filter(d => d.views > 0).sort((a,b) => b.engRate - a.engRate).slice(0,5);
+  document.getElementById('pt-engagement').innerHTML = byEng.length > 0
+    ? byEng.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric" style="color:var(--amber)">${d.engRate}%</span>`)).join('')
+    : noData;
+
+  // Chart
+  const labels = [], scanData = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now - i * 86400000);
+    labels.push(d.toLocaleDateString('en-GB', { day:'numeric', month:'short' }));
+    const ds = d.toISOString().split('T')[0];
+    scanData.push(curr.filter(e => (e.event_type === 'qr_scan' || e.event_type === 'menu_view') && e.created_at.startsWith(ds)).length);
+  }
+
+  const ctx = document.getElementById('perfScanChart');
+  if (perfChart) { perfChart.destroy(); perfChart = null; }
+  perfChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: scanData,
+        borderColor: '#E53935', borderWidth: 2.5,
+        fill: true, backgroundColor: 'rgba(229,57,53,.07)',
+        tension: .4, pointRadius: 4, pointBackgroundColor: '#E53935'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'Poppins', size: 10 } } },
+        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.05)' }, ticks: { font: { family: 'Poppins', size: 10 }, stepSize: 1 } }
+      }
+    }
+  });
+}
+
+function showFullRanking(type) {
+  if (!perfEnriched.length) { showToast('Load the performance page first'); return; }
+  const cfg = {
+    views:      { title: 'All dishes — most viewed',      sort: (a,b) => b.views - a.views,    metric: d => d.views + ' views',                      cls: 'red' },
+    ar:         { title: 'All dishes — most viewed in AR', sort: (a,b) => b.arViews - a.arViews, metric: d => d.arViews + ' AR',                        cls: 'ar' },
+    low:        { title: 'All dishes — least viewed',     sort: (a,b) => a.views - b.views,    metric: d => d.views + ' views',                      cls: '' },
+    trending:   { title: 'All dishes — trending',         sort: (a,b) => b.growth - a.growth,  metric: d => (d.growth >= 0 ? '+' : '') + d.growth,   cls: 'up' },
+    engagement: { title: 'All dishes — engagement rate',  sort: (a,b) => b.engRate - a.engRate, metric: d => d.engRate + '%',                          cls: '' }
+  }[type];
+  if (!cfg) return;
+  const sorted = [...perfEnriched].sort(cfg.sort);
+  document.getElementById('rankingTitle').textContent = cfg.title;
+  document.getElementById('rankingList').innerHTML = sorted.map((d, i) => `
+    <div style="display:flex;align-items:center;gap:.7rem;padding:.6rem 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:.68rem;font-weight:700;color:var(--subtle);width:18px;text-align:center;flex-shrink:0">${i+1}</span>
+      ${dishThumb(d, 34)}
+      <span style="font-size:.78rem;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name}</span>
+      <span style="font-size:.74rem;font-weight:700;${cfg.cls === 'red' ? 'color:var(--red)' : cfg.cls === 'ar' ? 'color:var(--purple)' : cfg.cls === 'up' ? 'color:var(--green)' : 'color:var(--muted)'}">${cfg.metric(d)}</span>
+    </div>`).join('');
+  openModal('rankingModal');
+}
+
+function setPerfRange(btn, range) {
+  document.querySelectorAll('#sec-performance .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadPerformance(range);
+}
+
+/* ── MENU ── */
+async function loadDishes() {
+  document.getElementById('dishTableBody').innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">Loading dishes…</td></tr>`;
+
+  const { data, error } = await db
+    .from('dishes')
+    .select('*, categories(name)')
+    .eq('restaurant_id', RESTAURANT_ID)
+    .order('position');
+
+  if (error) { showToast('Error loading dishes'); return; }
+  demoDishes = (data || []).map(d => ({
+    ...d,
+    category: d.categories?.name || '—'
+  }));
+  renderDishes();
+}
+
+const isDrinkCat = name => ['drink','boisson','beverage','cocktail','wine','vin','bière','beer','jus','water'].some(k => (name||'').toLowerCase().includes(k));
+function renderDishes() {
+  let list = demoDishes;
+  if (dishFilter === 'food') list = demoDishes.filter(d => !isDrinkCat(d.category));
+  else if (dishFilter === 'drinks') list = demoDishes.filter(d => isDrinkCat(d.category));
+  else if (dishFilter !== 'all') list = demoDishes.filter(d => d.category === dishFilter);
+  if (dishSearch) list = list.filter(d => d.name.toLowerCase().includes(dishSearch.toLowerCase()));
+  document.getElementById('dishCount').textContent = `Showing ${list.length} of ${demoDishes.length} dishes`;
+  document.getElementById('dishTableBody').innerHTML = list.length === 0
+    ? `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">No dishes found.</td></tr>`
+    : list.map(d => `
+    <tr>
+      <td><div style="width:36px;height:36px;border-radius:7px;background:#f5f5f5;display:flex;align-items:center;justify-content:center">
+        ${d.photo_url ? `<img src="${d.photo_url}" style="width:36px;height:36px;border-radius:7px;object-fit:cover">` : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg>`}
+      </div></td>
+      <td style="font-weight:600">${d.name}</td>
+      <td><span class="badge badge-starter">${d.category}</span></td>
+      <td style="font-weight:600">€${parseFloat(d.price).toFixed(2)}</td>
+      <td>${d.has_3d ? '<span class="badge badge-active">Ready</span>' : '<span class="badge" style="background:#f0f0f0;color:#999">No</span>'}</td>
+      <td>${d.has_ar ? '<span class="badge badge-active">Ready</span>' : '<span class="badge" style="background:#f0f0f0;color:#999">No</span>'}</td>
+      <td><label class="toggle"><input type="checkbox" ${d.is_active ? 'checked' : ''} onchange="toggleDish('${d.id}',this.checked)"><span class="toggle-slider"></span></label></td>
+      <td><div style="display:flex;gap:.3rem">
+        <button class="btn btn-ghost btn-sm" onclick="openEditDish('${d.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteDish('${d.id}','${d.name}')">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function filterDishes(btn, cat) {
+  document.querySelectorAll('#sec-menu .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  dishFilter = cat;
+  renderDishes();
+}
+function searchDishes(val) { dishSearch = val; renderDishes(); }
+
+async function toggleDish(id, val) {
+  const { error } = await db.from('dishes').update({ is_active: val }).eq('id', id);
+  if (error) { showToast('Error updating dish'); return; }
+  showToast(val ? 'Dish visible on menu' : 'Dish hidden from menu', 'success');
+  const dish = demoDishes.find(d => d.id === id);
+  if (dish) dish.is_active = val;
+}
+
+async function deleteDish(id, name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  const { error } = await db.from('dishes').delete().eq('id', id);
+  if (error) { showToast('Error deleting dish'); return; }
+  showToast('Dish deleted', 'success');
+  loadDishes();
+}
+
+async function addDish(e) {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.querySelector('input[type="text"]').value.trim();
+  const categoryName = form.querySelector('select').value;
+  const price = parseFloat(form.querySelector('input[placeholder="€0.00"]').value) || 0;
+
+  const [{ data: cats }, { data: menus }] = await Promise.all([
+    db.from('categories').select('id,name').eq('restaurant_id', RESTAURANT_ID),
+    db.from('menus').select('id').eq('restaurant_id', RESTAURANT_ID).eq('is_active', true).limit(1)
+  ]);
+  const cat = cats?.find(c => c.name === categoryName);
+  const menuId = menus?.[0]?.id || null;
+
+  const { error } = await db.from('dishes').insert({
+    restaurant_id: RESTAURANT_ID,
+    menu_id: menuId,
+    category_id: cat?.id || null,
+    name, price,
+    has_3d: false, has_ar: false, is_active: true, position: 99
+  });
+  if (error) { showToast('Error adding dish'); return; }
+  closeModal('addDishModal');
+  showToast('Dish added', 'success');
+  form.reset();
+  loadDishes();
+}
+
+function openEditDish(id) {
+  const dish = demoDishes.find(d => d.id === id);
+  if (!dish) return;
+  currentEditDish = dish;
+
+  document.getElementById('editDishName').value = dish.name;
+  document.getElementById('editDishPrice').value = dish.price;
+  document.getElementById('editDishDesc').value = dish.description || '';
+  document.getElementById('editDishActive').checked = dish.is_active;
+  document.getElementById('editDishCategory').value = dish.category;
+  document.getElementById('editPhotoPreview').innerHTML = dish.photo_url
+    ? `<img src="${dish.photo_url}" style="width:100%;height:140px;object-fit:cover;border-radius:8px">`
+    : `<div style="height:140px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--subtle)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
+
+  showSection('edit-dish', null);
+}
+
+async function saveEditDish() {
+  if (!currentEditDish) return;
+  const name = document.getElementById('editDishName').value.trim();
+  const price = parseFloat(document.getElementById('editDishPrice').value) || 0;
+  const description = document.getElementById('editDishDesc').value.trim();
+  const is_active = document.getElementById('editDishActive').checked;
+
+  const { error } = await db.from('dishes').update({ name, price, description, is_active, updated_at: new Date().toISOString() }).eq('id', currentEditDish.id);
+  if (error) { showToast('Error saving dish'); return; }
+  showToast('Dish saved', 'success');
+  loadDishes();
+  showSection('menu', document.querySelectorAll('.nav-item')[1]);
+}
+
+/* ── TICKETS ── */
+let RESTAURANT_ID = null;
+function statusClass(s) { return {Open:'open',Waiting:'waiting',Resolved:'resolved','In Progress':'progress'}[s]||'open'; }
+let ticketFilter = 'all';
+
+async function loadTickets() {
+  document.getElementById('ticketList').innerHTML = `<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.76rem">Loading…</div>`;
+  const { data, error } = await db
+    .from('tickets')
+    .select('*, ticket_messages(*)')
+    .eq('restaurant_id', RESTAURANT_ID)
+    .order('created_at', { ascending: false });
+  if (error) { showToast('Error loading tickets'); return; }
+  demoTickets = (data || []).map(t => ({
+    ...t,
+    messages: (t.ticket_messages || [])
+      .sort((a,b) => new Date(a.created_at) - new Date(b.created_at))
+      .map(m => ({
+        from: m.from_role,
+        text: m.content,
+        time: new Date(m.created_at).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }),
+        id: m.id
+      }))
+  }));
+  // Update ticket badge
+  const open = demoTickets.filter(t => t.status !== 'Resolved' && t.status !== 'Closed').length;
+  const badge = document.getElementById('ticketBadge');
+  badge.textContent = open;
+  badge.style.display = open > 0 ? 'inline-flex' : 'none';
+  renderTickets();
+  if (demoTickets.length) selectTicket(0);
+}
+
+function renderTickets() {
+  let list = demoTickets;
+  if (ticketFilter === 'open') list = demoTickets.filter(t => t.status === 'Open');
+  else if (ticketFilter === 'waiting') list = demoTickets.filter(t => t.status === 'Waiting');
+  else if (ticketFilter === 'resolved') list = demoTickets.filter(t => t.status === 'Resolved');
+
+  document.getElementById('ticketList').innerHTML = list.length === 0
+    ? `<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.76rem">No tickets found.</div>`
+    : list.map((t,i) => `
+      <div class="ticket-item ${demoTickets.indexOf(t)===currentTicket?'active':''}" onclick="selectTicket(${demoTickets.indexOf(t)})">
+        <div class="ti-subject">${t.subject}</div>
+        <div class="ti-meta">
+          <span class="badge badge-${statusClass(t.status)}">${t.status}</span>
+          <span style="font-size:.63rem;color:var(--subtle)">${t.type}</span>
+        </div>
+      </div>`).join('');
+}
+
+function selectTicket(i) {
+  currentTicket = i; renderTickets();
+  const t = demoTickets[i];
+  document.getElementById('chatSubject').textContent = t.subject;
+  document.getElementById('chatMeta').innerHTML = `<span class="badge badge-${statusClass(t.status)}" style="font-size:.65rem">${t.status}</span>`;
+
+  const msgs = document.getElementById('chatMessages');
+  if (t.messages.length === 0) {
+    msgs.innerHTML = `<div class="empty"><div style="font-size:.78rem">No messages yet.</div></div>`;
+    return;
+  }
+
+  // Group messages by date for date separators
+  let lastDate = null;
+  const restInitials = (currentRestaurant?.name || 'LP').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  msgs.innerHTML = t.messages.map(m => {
+    const isRest = m.from === 'restaurant';
+    const initials = isRest ? restInitials : 'VG';
+    const msgDate = m.time.split(',')[0] || 'Today';
+    let sep = '';
+    if (msgDate !== lastDate) {
+      lastDate = msgDate;
+      sep = `<div class="chat-date-sep">${msgDate}</div>`;
+    }
+    const timeOnly = m.time.includes(',') ? m.time.split(', ')[1] : m.time;
+    return `${sep}
+      <div class="msg-wrap ${isRest ? 'restaurant' : 'support'}">
+        <div class="msg-avatar ${isRest ? 'restaurant' : 'support'}">${initials}</div>
+        <div class="msg ${isRest ? 'restaurant' : 'support'}">
+          <div class="msg-bubble">${m.text.replace(/\n/g,'<br>')}</div>
+          <div class="msg-footer">
+            <span class="msg-time">${timeOnly}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function filterTickets(btn, f) {
+  document.querySelectorAll('#sec-tickets .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ticketFilter = f;
+  renderTickets();
+}
+
+function sendMessage(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessageBtn(); } }
+async function sendMessageBtn() {
+  if (currentTicket < 0) return;
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const ticket = demoTickets[currentTicket];
+  const { error } = await db.from('ticket_messages').insert({
+    ticket_id: ticket.id,
+    from_role: 'restaurant',
+    content: text
+  });
+  if (error) { showToast('Error sending message'); return; }
+  input.value = '';
+  await loadTickets();
+  selectTicket(currentTicket);
+}
+
+async function sendFileMessage(input) {
+  if (!input.files[0] || currentTicket < 0) return;
+  const file = input.files[0];
+  const ticket = demoTickets[currentTicket];
+  const ext = file.name.split('.').pop().toLowerCase();
+  const path = `tickets/${ticket.id}/${Date.now()}_${file.name}`;
+
+  const { data: upload, error: upErr } = await db.storage.from('dish-photos').upload(path, file, { upsert: true });
+  if (upErr) {
+    // Storage not set up yet — send filename as text fallback
+    const { error } = await db.from('ticket_messages').insert({ ticket_id: ticket.id, from_role: 'restaurant', content: `📎 ${file.name}` });
+    if (!error) { await loadTickets(); selectTicket(currentTicket); }
+    input.value = '';
+    return;
+  }
+  const { data: { publicUrl } } = db.storage.from('dish-photos').getPublicUrl(path);
+  const isImg = ['jpg','jpeg','png','gif','webp'].includes(ext);
+  const content = isImg ? `📎 ${file.name}\n${publicUrl}` : `📎 ${file.name}\n${publicUrl}`;
+  await db.from('ticket_messages').insert({ ticket_id: ticket.id, from_role: 'restaurant', content });
+  await loadTickets();
+  selectTicket(currentTicket);
+  input.value = '';
+}
+
+async function submitTicket(e) {
+  e.preventDefault();
+  const subject = document.getElementById('ticketSubject').value.trim();
+  const type = document.getElementById('ticketType').value;
+  const msg = document.getElementById('ticketMessage').value.trim();
+
+  const { data: ticket, error } = await db.from('tickets').insert({
+    restaurant_id: RESTAURANT_ID,
+    subject, type,
+    status: 'Open',
+    priority: 'Normal'
+  }).select().single();
+
+  if (error) { showToast('Error creating ticket'); return; }
+
+  await db.from('ticket_messages').insert({
+    ticket_id: ticket.id,
+    from_role: 'restaurant',
+    content: msg
+  });
+
+  closeModal('newTicketModal');
+  showToast("Ticket sent — we'll reply shortly", 'success');
+  e.target.reset();
+  await loadTickets();
+  selectTicket(0);
+}
+
+/* ── SETTINGS ── */
+function checkPassword(val) {
+  const toggle = (id, ok) => { const el = document.getElementById(id); if (!el) return; el.className = 'password-rule' + (ok ? ' ok' : ''); el.querySelector('svg').innerHTML = ok ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/>'; };
+  toggle('rule-length', val.length >= 8);
+  toggle('rule-upper', /[A-Z]/.test(val));
+  toggle('rule-number', /[0-9]/.test(val));
+}
+async function updateEmail() {
+  const newEmail = document.getElementById('newEmail').value.trim();
+  if (!newEmail) { showToast('Enter a new email address'); return; }
+  const { error } = await db.auth.updateUser({ email: newEmail });
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast('Verification email sent — check your inbox', 'success');
+  document.getElementById('newEmail').value = '';
+}
+async function updatePassword() {
+  const p = document.getElementById('newPassword').value;
+  const c = document.getElementById('confirmPassword').value;
+  if (!p || p !== c) { showToast('Passwords do not match'); return; }
+  const { error } = await db.auth.updateUser({ password: p });
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast('Password updated', 'success');
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+}
+async function saveRestaurantInfo() {
+  const name = document.getElementById('restName').value.trim();
+  const phone = document.getElementById('restPhone').value.trim();
+  const address = document.getElementById('restAddress').value.trim();
+  const { error } = await db.from('restaurants').update({ name, phone, address, updated_at: new Date().toISOString() }).eq('id', RESTAURANT_ID);
+  if (error) { showToast('Error saving info'); return; }
+  if (currentRestaurant) currentRestaurant.name = name;
+  document.getElementById('sidebarRestName').textContent = name;
+  showToast('Info saved', 'success');
+}
+function previewEditPhoto(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => { document.getElementById('editPhotoPreview').innerHTML = `<img src="${e.target.result}" style="width:100%;height:140px;object-fit:cover;border-radius:8px">`; };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function previewLogo(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => { document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" style="height:64px;border-radius:8px;margin:0 auto;display:block">`; };
+  reader.readAsDataURL(input.files[0]);
+}
+
+/* ── CHART FILTER ── */
+function setChartFilter(range) { loadOverview(range); }
+
+/* ── UTILS ── */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+async function logout() { await db.auth.signOut(); window.location.href = 'login.html'; }
+let toastTimer;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (type === 'success' ? ' success' : '');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.className = 'toast', 3000);
+}
+
+/* ── SUBSCRIPTION ── */
+async function loadSubscription() {
+  const { data: sub } = await db.from('subscriptions').select('*').eq('restaurant_id', RESTAURANT_ID).single();
+  const planLabels = { starter: 'Starter', premium: 'Premium', enterprise: 'Enterprise' };
+  const planPrices = { starter: '€79', premium: '€149', enterprise: 'Custom' };
+  const plan = sub?.plan || currentRestaurant?.plan || 'starter';
+  const status = sub?.status || currentRestaurant?.status || 'trial';
+  const price = sub?.price_monthly ? '€' + parseFloat(sub.price_monthly).toFixed(0) : planPrices[plan] || '—';
+  const renewal = sub?.next_invoice_date ? new Date(sub.next_invoice_date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : '—';
+  const payment = sub?.payment_method || '—';
+
+  document.getElementById('subPlan').textContent = planLabels[plan] || plan;
+  document.getElementById('subPrice').textContent = price;
+  document.getElementById('subRenewal').textContent = renewal;
+  document.getElementById('subPayment').textContent = payment;
+  document.getElementById('subPlanTitle').textContent = 'Your VistaGusto Plan — ' + (planLabels[plan] || plan);
+
+  const statusEl = document.getElementById('subStatus');
+  statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+  statusEl.className = 'badge ' + (status === 'active' ? 'badge-active' : status === 'trial' ? 'badge-starter' : 'badge');
+
+  document.getElementById('invoiceList').innerHTML = `<div style="padding:1rem;text-align:center;font-size:.75rem;color:var(--muted)">Invoice history available once Stripe is connected.</div>`;
+}
+
+/* ── INIT ── */
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+
+  if (session) {
+    const { data: profile } = await db.from('profiles').select('role, restaurant_id').eq('id', session.user.id).single();
+    if (!profile || profile.role !== 'restaurant') { await db.auth.signOut(); window.location.href = 'login.html'; return; }
+    RESTAURANT_ID = profile.restaurant_id;
+    document.getElementById('currentEmail').value = session.user.email || '';
+  } else {
+    // TEMP: no auth session — use hardcoded ID so dashboard is previewable
+    RESTAURANT_ID = '01bd3795-f162-4768-b04b-592790c12be1';
+  }
+
+  if (RESTAURANT_ID) {
+    const { data: restaurant } = await db.from('restaurants').select('*').eq('id', RESTAURANT_ID).single();
+    currentRestaurant = restaurant;
+    if (restaurant) {
+      document.getElementById('sidebarRestName').textContent = restaurant.name || '';
+      document.getElementById('restName').value = restaurant.name || '';
+      document.getElementById('restPhone').value = restaurant.phone || '';
+      document.getElementById('restAddress').value = restaurant.address || '';
+      if (restaurant.logo_url) {
+        document.getElementById('logoPreview').innerHTML = `<img src="${restaurant.logo_url}" style="height:64px;border-radius:8px;margin:0 auto;display:block">`;
+      }
+    }
+  }
+
+  showSection('overview', document.querySelector('.nav-item'));
+  document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+
+  const { data: ticketData } = await db.from('tickets').select('status').eq('restaurant_id', RESTAURANT_ID);
+  const openCount = (ticketData || []).filter(t => t.status !== 'Resolved' && t.status !== 'Closed').length;
+  const badge = document.getElementById('ticketBadge');
+  badge.textContent = openCount;
+  badge.style.display = openCount > 0 ? 'inline-flex' : 'none';
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

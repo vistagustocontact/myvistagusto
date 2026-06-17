@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>myvistagusto.com — Sign in</title>
+<link rel="icon" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/anydore" rel="stylesheet">
+<style>
+:root{--red:#F06B71;--pink:#FC8B73;--light:#FFF3F0;--g:linear-gradient(135deg,#F06B71 0%,#FC8B73 100%)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Poppins',sans-serif;color:#1a1a1a}
+body{display:flex;min-height:100vh}
+
+.left{
+  width:44%;background:var(--g);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:4rem 4.5rem;position:relative;overflow:hidden;
+}
+.left-blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none}
+.lb1{width:400px;height:400px;top:-120px;right:-100px}
+.lb2{width:300px;height:300px;bottom:-80px;left:-60px}
+.lb3{width:180px;height:180px;top:42%;right:80px}
+.left-logo{margin-bottom:2rem;position:relative;z-index:1}
+.left-logo img{height:52px;filter:brightness(0) invert(1);opacity:.95}
+.left-tagline{font-size:1.1rem;color:rgba(255,255,255,.92);font-weight:300;line-height:1.8;margin-bottom:2.8rem;position:relative;z-index:1;max-width:320px}
+.left-tagline strong{font-weight:600;color:#fff}
+.left-features{display:flex;flex-direction:column;gap:.85rem;position:relative;z-index:1}
+.lf{display:flex;align-items:center;gap:.85rem;color:rgba(255,255,255,.88);font-size:.85rem}
+.lf-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.right{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;background:#fafafa}
+.form-card{width:100%;max-width:430px;background:#fff;border-radius:24px;padding:3rem;box-shadow:0 12px 50px rgba(0,0,0,.09)}
+
+.fc-logo{margin-bottom:1.6rem}
+.fc-logo img{height:36px}
+.fc-title{font-size:1.4rem;font-weight:700;color:#1a1a1a;margin-bottom:.25rem}
+.fc-sub{font-size:.84rem;color:#888;margin-bottom:2rem;font-weight:400}
+
+.role-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.8rem}
+.role-card{
+  border:2px solid rgba(240,107,113,.2);border-radius:14px;
+  padding:1.2rem .9rem;cursor:pointer;text-align:center;
+  background:#fff;transition:all .2s;font-family:'Poppins',sans-serif;
+}
+.role-card:hover{border-color:rgba(240,107,113,.45);background:rgba(255,243,240,.5)}
+.role-card.active{border-color:var(--red);background:var(--light)}
+.role-icon-wrap{width:44px;height:44px;border-radius:12px;background:rgba(240,107,113,.1);display:flex;align-items:center;justify-content:center;margin:0 auto .7rem;transition:background .2s}
+.role-card.active .role-icon-wrap{background:rgba(240,107,113,.18)}
+.role-icon-wrap svg{stroke:var(--red)}
+.role-title{font-size:.82rem;font-weight:600;color:#1a1a1a;display:block}
+.role-card.active .role-title{color:var(--red)}
+.role-sub{font-size:.7rem;color:#aaa;display:block;margin-top:.2rem;font-weight:400}
+
+.divider{height:1px;background:rgba(0,0,0,.07);margin-bottom:1.6rem}
+
+.fg{margin-bottom:1.1rem}
+.fg label{display:block;font-size:.73rem;font-weight:600;color:#555;margin-bottom:.4rem;letter-spacing:.03em;text-transform:uppercase}
+.fg input{
+  width:100%;padding:.85rem 1rem;border:1.5px solid rgba(0,0,0,.1);
+  border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem;
+  color:#1a1a1a;background:#fff;outline:none;transition:border-color .2s;
+}
+.fg input:focus{border-color:var(--red)}
+.fg input::placeholder{color:#c0c0c0}
+
+.btn-login{
+  width:100%;padding:.95rem;background:var(--g);border:none;
+  border-radius:10px;color:#fff;font-family:'Poppins',sans-serif;
+  font-size:.95rem;font-weight:600;cursor:pointer;
+  transition:opacity .2s,transform .1s;margin-top:.6rem;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.btn-login:hover{opacity:.88}
+.btn-login:active{transform:scale(.99)}
+
+.demo-box{
+  margin-top:1.6rem;padding:1rem 1.1rem;
+  background:#f7f7f7;border-radius:10px;
+  font-size:.74rem;color:#777;line-height:1.75;
+  border-left:3px solid rgba(240,107,113,.3);
+}
+.demo-box strong{color:var(--red);font-weight:600;display:block;margin-bottom:.2rem}
+
+@media(max-width:768px){
+  .left{display:none}
+  .right{background:#fff;padding:1.5rem}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<div class="left">
+  <div class="left-blob lb1"></div>
+  <div class="left-blob lb2"></div>
+  <div class="left-blob lb3"></div>
+  <div class="left-logo">
+    <img src="logo1.png" alt="VistaGusto">
+  </div>
+  <p class="left-tagline">The complete control center for your <strong>3D digital menu</strong> experience.</p>
+  <div class="left-features">
+    <div class="lf">
+      <div class="lf-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      Manage your menu in real time
+    </div>
+    <div class="lf">
+      <div class="lf-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      Track QR scans, views & AR interactions
+    </div>
+    <div class="lf">
+      <div class="lf-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      Request new 3D dish models
+    </div>
+    <div class="lf">
+      <div class="lf-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      Contact support via live chat
+    </div>
+    <div class="lf">
+      <div class="lf-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      Manage billing & subscription
+    </div>
+  </div>
+</div>
+
+<div class="right">
+  <div class="form-card">
+    <div class="fc-logo"><img src="logo1.png" alt="VistaGusto"></div>
+    <div class="fc-title">Sign in</div>
+    <div class="fc-sub">Access your VistaGusto space</div>
+
+    <div class="role-wrap">
+      <button class="role-card active" onclick="selectRole(this,'restaurant')">
+        <div class="role-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="11" x2="7" y2="22"/>
+            <line x1="20" y1="2" x2="20" y2="22"/><path d="M17 2v5"/><path d="M17 7s3 0 3 3"/>
+          </svg>
+        </div>
+        <span class="role-title">I'm a restaurant</span>
+        <span class="role-sub">Manage my menu & stats</span>
+      </button>
+      <button class="role-card" onclick="selectRole(this,'admin')">
+        <div class="role-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <span class="role-title">VistaGusto admin</span>
+        <span class="role-sub">Internal team access</span>
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <form onsubmit="doLogin(event)">
+      <div class="fg">
+        <label>Email address</label>
+        <input type="email" id="email" placeholder="you@restaurant.com" required>
+      </div>
+      <div class="fg">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-login">
+        Sign in
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </form>
+
+    <div class="demo-box">
+      <strong>Demo access</strong>
+      Restaurant: any email + any password<br>
+      Admin: include "admin" in email (e.g. admin@vistagusto.com)
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedRole = 'restaurant';
+function selectRole(btn, role) {
+  selectedRole = role;
+  document.querySelectorAll('.role-card').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function doLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if (selectedRole === 'admin' || email.toLowerCase().includes('admin')) {
+    localStorage.setItem('vg_role','admin');
+    localStorage.setItem('vg_email',email);
+    window.location.href = 'dashboard-admin.html';
+  } else {
+    localStorage.setItem('vg_role','restaurant');
+    localStorage.setItem('vg_email',email);
+    localStorage.setItem('vg_restaurant','Le Jardin Gastronomique');
+    window.location.href = 'dashboard-restaurant.html';
+  }
+}
+</script>
+</body>
+</html>
