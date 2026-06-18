@@ -430,8 +430,6 @@ function open3D(name, glb, usdz, dishId) {
   overlay.classList.add('open');
   document.documentElement.style.overflow = 'hidden';
   document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.width = '100%';
   // Set src after overlay is visible so model-viewer has real dimensions
   requestAnimationFrame(() => {
     const mv = document.getElementById('modelViewer');
@@ -491,8 +489,6 @@ function closeViewer() {
   document.getElementById('viewerOverlay').classList.remove('open');
   document.documentElement.style.overflow = '';
   document.body.style.overflow = '';
-  document.body.style.position = '';
-  document.body.style.width = '';
   document.getElementById('modelViewer').removeAttribute('src');
 }
 
