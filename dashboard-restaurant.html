@@ -1337,7 +1337,7 @@ async function loadPerformance(range) {
   const menuViews  = cnt(curr, 'menu_view');
   const dishClicks = cnt(curr, 'dish_view');
   const arViews    = cnt(curr, 'ar_view');
-  const arRate     = menuViews > 0 ? ((arViews / menuViews) * 100).toFixed(1) : '0.0';
+  const arRate     = menuViews > 0 ? Math.min(100, (arViews / menuViews) * 100).toFixed(1) : '0.0';
 
   const qrPrev    = cnt(prev, 'qr_scan');
   const menuPrev  = cnt(prev, 'menu_view');
