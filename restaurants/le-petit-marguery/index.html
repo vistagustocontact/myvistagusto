@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.3.0/dist/model-viewer.min.js"></script>
 <style>
 :root{
   --bg:#0E0E0E;
@@ -448,19 +448,38 @@ function openAR(glb, usdz, dishId) {
   document.getElementById('arConfirmOverlay').style.display = 'flex';
 }
 
-async function confirmAR() {
+function confirmAR() {
   document.getElementById('arConfirmOverlay').style.display = 'none';
   if (!arPending) return;
   const { glb, usdz, dishId } = arPending;
   arPending = null;
+
+  // Fire analytics without awaiting — awaiting breaks iOS gesture chain
   logEvent('dish_view', dishId || null);
-  await logEvent('ar_view', dishId || null);
-  const mv = document.getElementById('modelViewer');
-  if (glb) mv.setAttribute('src', glb);
-  if (usdz) mv.setAttribute('ios-src', usdz);
-  else mv.removeAttribute('ios-src');
-  await new Promise(r => setTimeout(r, 150));
-  try { mv.activateAR(); } catch (e) { console.warn('AR activation failed:', e); }
+  logEvent('ar_view', dishId || null);
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS && usdz) {
+    // iOS: trigger Quick Look AR via rel="ar" anchor — most reliable method
+    let link = document.getElementById('iosArLink');
+    if (!link) {
+      link = document.createElement('a');
+      link.id = 'iosArLink';
+      link.rel = 'ar';
+      link.style.display = 'none';
+      link.appendChild(document.createElement('img'));
+      document.body.appendChild(link);
+    }
+    link.href = usdz;
+    link.click();
+  } else {
+    const mv = document.getElementById('modelViewer');
+    if (glb) mv.setAttribute('src', glb);
+    if (usdz) mv.setAttribute('ios-src', usdz);
+    else mv.removeAttribute('ios-src');
+    setTimeout(() => { try { mv.activateAR(); } catch(e) {} }, 100);
+  }
 }
 
 function closeArConfirm() {
