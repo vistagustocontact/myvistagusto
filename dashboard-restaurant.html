@@ -1370,8 +1370,6 @@ async function loadPerformance(range) {
   const arDishViews = arDishes.reduce((s, d) => s + d.views, 0);
   const arDishArViews = arDishes.reduce((s, d) => s + d.arViews, 0);
   const avgEngRate = arDishViews > 0 ? Math.min(100, Math.round((arDishArViews / arDishViews) * 100)) : 0;
-  console.table(arDishes.map(d => ({ name: d.name, dish_views: d.views, ar_views: d.arViews, engRate: d.engRate + '%' })));
-  console.log('Engagement KPI:', arDishArViews, 'AR /', arDishViews, 'dish views =', avgEngRate + '%');
 
   const arDishesPrev = demoDishes.filter(d => (dishArPrevMap[d.id] || 0) > 0);
   const arDishViewsPrev = arDishesPrev.reduce((s, d) => s + (dishViewPrevMap[d.id] || 0), 0);
