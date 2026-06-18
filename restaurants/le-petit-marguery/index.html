@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -120,12 +120,6 @@ model-viewer{width:100%;height:100%;position:absolute;inset:0;--poster-color:tra
 .modal-allergen-chips{display:flex;flex-wrap:wrap;gap:.3rem}
 .modal-allergen-chip{display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .55rem;border-radius:20px;border:1px solid rgba(255,255,255,.1);font-size:.68rem;color:var(--muted);background:rgba(255,255,255,.04)}
 
-/* ── LANG SELECTOR ── */
-.lang-selector{display:flex;gap:.3rem;justify-content:center;padding:.65rem 0 .1rem;flex-wrap:wrap}
-.lang-btn{background:none;border:1.5px solid rgba(255,255,255,.1);color:rgba(242,237,228,.45);padding:.22rem .58rem;border-radius:20px;font-family:'Poppins',sans-serif;font-size:.65rem;font-weight:500;cursor:pointer;transition:all .15s;letter-spacing:.02em}
-.lang-btn:hover{border-color:var(--gold);color:var(--gold)}
-.lang-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.1)}
-.lang-loading{display:none;align-items:center;justify-content:center;gap:.4rem;padding:.35rem 0;font-size:.68rem;color:var(--gold);opacity:.75}
 
 /* ── ANIMATIONS ── */
 .dish-card{opacity:0;transform:translateY(16px);animation:fadeUp .4s ease forwards}
@@ -147,16 +141,6 @@ model-viewer{width:100%;height:100%;position:absolute;inset:0;--poster-color:tra
   <h1 class="header-name">Le Petit Marguery</h1>
   <div class="header-sub">Traditional French cuisine since 1985</div>
   <div class="header-divider"><span>✦</span></div>
-  <div class="lang-selector">
-    <button class="lang-btn active" data-lang="fr" onclick="switchLang('fr')">🇫🇷 FR</button>
-    <button class="lang-btn" data-lang="en" onclick="switchLang('en')">🇬🇧 EN</button>
-    <button class="lang-btn" data-lang="es" onclick="switchLang('es')">🇪🇸 ES</button>
-    <button class="lang-btn" data-lang="zh" onclick="switchLang('zh')">🇨🇳 ZH</button>
-  </div>
-  <div class="lang-loading" id="langLoading">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-    Translating…
-  </div>
 </div>
 
 <!-- CATEGORY NAV -->
@@ -409,7 +393,6 @@ function openDishModal(id) {
 
   document.getElementById('dishModalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  if (currentLang !== 'fr') applyTranslations(document.getElementById('dishModal'));
 }
 
 function closeDishModal(e) {
@@ -502,49 +485,6 @@ const ALLERGEN_MAP = {
   lupin:{label:'Lupin',emoji:'🌼'}, molluscs:{label:'Molluscs',emoji:'🐚'},
 };
 
-/* ── TRANSLATION ── */
-let currentLang = 'fr';
-const _tc = {};
-
-async function translateText(text, lang) {
-  if (!text || lang === 'fr') return text;
-  const key = `${lang}:${text}`;
-  if (_tc[key]) return _tc[key];
-  const ssKey = 'vg_t_' + key.substring(0, 90);
-  const cached = sessionStorage.getItem(ssKey);
-  if (cached) { _tc[key] = cached; return cached; }
-  try {
-    const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=fr|${lang}`);
-    const j = await r.json();
-    const result = j.responseData?.translatedText || text;
-    _tc[key] = result;
-    try { sessionStorage.setItem(ssKey, result); } catch {}
-    return result;
-  } catch { return text; }
-}
-
-async function applyTranslations(root = document) {
-  const els = [...root.querySelectorAll('[data-orig]')];
-  await Promise.all(els.map(async el => {
-    el.textContent = await translateText(el.dataset.orig, currentLang);
-  }));
-}
-
-async function switchLang(lang) {
-  if (lang === currentLang) return;
-  currentLang = lang;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-  if (lang === 'fr') {
-    document.querySelectorAll('[data-orig]').forEach(el => el.textContent = el.dataset.orig);
-    return;
-  }
-  const loading = document.getElementById('langLoading');
-  loading.style.display = 'flex';
-  document.querySelectorAll('[data-orig]').forEach(el => el.style.opacity = '.4');
-  await applyTranslations();
-  document.querySelectorAll('[data-orig]').forEach(el => el.style.opacity = '');
-  loading.style.display = 'none';
-}
 
 loadMenu();
 </script>
