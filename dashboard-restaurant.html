@@ -28,7 +28,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);dis
 /* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar);min-height:100vh;background:#fafaf8;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow:hidden}
 .sidebar-top{padding:1.2rem 1rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
-img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%}
+img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mix-blend-mode:multiply}
 .restaurant-chip{display:flex;align-items:center;gap:.5rem}
 .restaurant-chip-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
 .restaurant-name{font-size:.85rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -779,7 +779,7 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%}
           <h2 style="font-size:1rem;font-weight:700;margin-bottom:.1rem">Subscription & Billing</h2>
           <div style="font-size:.72rem;color:var(--muted)">Manage your subscription and view your invoices.</div>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="window.location.href='mailto:vistagustocontact@gmail.com?subject=Billing enquiry'">Contact billing</button>
+        <button class="btn btn-ghost btn-sm" onclick="showSection('tickets',document.querySelectorAll('.nav-item')[3])">Contact support</button>
       </div>
 
       <!-- Plan summary top row -->
