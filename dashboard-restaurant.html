@@ -1422,7 +1422,7 @@ async function loadPerformance(range) {
     : noData;
 
   // Engagement rate (ar_views / dish_views per dish)
-  const byEng = [...perfEnriched].filter(d => d.views > 0).sort((a,b) => b.engRate - a.engRate).slice(0,5);
+  const byEng = [...perfEnriched].sort((a,b) => b.engRate - a.engRate).slice(0,5);
   document.getElementById('pt-engagement').innerHTML = byEng.length > 0
     ? byEng.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric" style="color:var(--amber)">${d.engRate}%</span>`)).join('')
     : noData;
