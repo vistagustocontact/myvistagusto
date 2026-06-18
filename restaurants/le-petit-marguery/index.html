@@ -170,13 +170,13 @@ model-viewer{width:100%;height:100%;position:absolute;inset:0;--poster-color:tra
       loading="eager"
       ar
       ar-modes="webxr scene-viewer quick-look"
-      shadow-intensity="1"
-      environment-image="neutral"
-      exposure="0.8"
+      shadow-intensity="0"
+      exposure="1"
       min-camera-orbit="auto 0deg auto"
       max-camera-orbit="auto 85deg auto"
       camera-orbit="0deg 70deg auto"
     ></model-viewer>
+    <div id="viewerStatus" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:rgba(255,255,255,.6);font-size:.78rem;padding:1rem"></div>
     <div class="viewer-hint">Drag to rotate · Pinch to zoom · Tap AR to view in your space</div>
   </div>
 </div>
@@ -511,8 +511,24 @@ const ALLERGEN_MAP = {
 loadMenu();
 
 const mv = document.getElementById('modelViewer');
-mv.addEventListener('error', e => console.error('model-viewer error:', e.detail));
-mv.addEventListener('load', () => console.log('model-viewer loaded OK'));
+const viewerStatus = document.getElementById('viewerStatus');
+
+mv.addEventListener('progress', e => {
+  const pct = Math.round((e.detail.totalProgress || 0) * 100);
+  if (pct < 100) {
+    viewerStatus.style.display = 'block';
+    viewerStatus.textContent = 'Loading model… ' + pct + '%';
+  } else {
+    viewerStatus.style.display = 'none';
+  }
+});
+mv.addEventListener('load', () => {
+  viewerStatus.style.display = 'none';
+});
+mv.addEventListener('error', e => {
+  viewerStatus.style.display = 'block';
+  viewerStatus.innerHTML = 'Could not load 3D model.<br><small style="opacity:.6">' + (e.detail?.type || 'unknown error') + '</small>';
+});
 </script>
 </body>
 </html>
