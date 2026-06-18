@@ -1365,15 +1365,9 @@ async function loadPerformance(range) {
     growth:   ((dishViewMap[d.id] || 0) - (dishViewPrevMap[d.id] || 0))
   }));
 
-  // Engagement rate = average of per-dish engagement rates (dishes with at least 1 view)
-  const activeDishes = perfEnriched.filter(d => d.views > 0);
-  const avgEngRate = activeDishes.length > 0
-    ? Math.round(activeDishes.reduce((sum, d) => sum + d.engRate, 0) / activeDishes.length)
-    : 0;
-  const prevActiveDishes = demoDishes.filter(d => (dishViewPrevMap[d.id] || 0) > 0);
-  const avgEngRatePrev = prevActiveDishes.length > 0
-    ? Math.round(prevActiveDishes.reduce((sum, d) => sum + Math.min(100, Math.round(((dishArPrevMap[d.id] || 0) / dishViewPrevMap[d.id]) * 100)), 0) / prevActiveDishes.length)
-    : 0;
+  // Engagement rate = total AR views / total dish views (weighted, same logic as per-dish)
+  const avgEngRate = dishClicks > 0 ? Math.min(100, Math.round((arViews / dishClicks) * 100)) : 0;
+  const avgEngRatePrev = clicksPrev > 0 ? Math.min(100, Math.round((arPrev / clicksPrev) * 100)) : 0;
 
   const tStr = (c, p) => { const t = trendStr(c, p); return t ? `<span class="perf-kpi-trend${t.up ? '' : ' down'}">${t.up ? '↑ +' : '↓ '}${Math.abs(t.pct)}%</span>` : ''; };
 
