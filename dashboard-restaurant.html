@@ -339,6 +339,111 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
 .empty svg{stroke:var(--subtle);margin:0 auto .8rem;display:block}
 .empty-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
 .empty-sub{font-size:.76rem}
+/* ── AI FEATURES ── */
+.ai-insight-card {
+  background: linear-gradient(135deg, #fff5f5 0%, #fff 60%);
+  border: 1px solid rgba(229,57,53,.15);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.2rem;
+  box-shadow: var(--shadow);
+}
+.ai-insight-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .55rem;
+}
+.ai-insight-label {
+  font-size: .74rem;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .025em;
+  flex: 1;
+}
+.ai-refresh-btn {
+  background: none;
+  border: 1px solid rgba(229,57,53,.25);
+  font-size: .68rem;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  padding: .18rem .55rem;
+  border-radius: 20px;
+  transition: all .15s;
+}
+.ai-refresh-btn:hover { border-color: var(--red); color: var(--red); background: #fff5f5; }
+.ai-insight-text {
+  font-size: .83rem;
+  line-height: 1.75;
+  color: var(--text);
+  min-height: 2.5rem;
+}
+.ai-insight-text.loading { color: var(--muted); font-style: italic; }
+.ai-chat-bubble {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--g);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(229,57,53,.35);
+  z-index: 900;
+  transition: transform .2s, box-shadow .2s;
+  border: none;
+}
+.ai-chat-bubble:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(229,57,53,.45); }
+.ai-chat-panel {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.5rem;
+  width: 340px;
+  height: 460px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 48px rgba(0,0,0,.14);
+  z-index: 900;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  animation: aiSlideIn .2s ease;
+}
+@keyframes aiSlideIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.ai-chat-panel.open { display: flex; }
+.ai-chat-ph {
+  padding: .85rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--g);
+  color: #fff;
+}
+.ai-chat-ph-title {
+  font-size: .85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+.ai-chat-ph-close { background:none; border:none; color:rgba(255,255,255,.85); cursor:pointer; font-size:1.1rem; line-height:1; padding:0; }
+.ai-chat-msgs { flex:1; overflow-y:auto; padding:.85rem; display:flex; flex-direction:column; gap:.65rem; background:#f7f7f8; }
+.ai-msg-wrap { display:flex; flex-direction:column; }
+.ai-msg-wrap.user { align-items:flex-end; }
+.ai-msg-bub { max-width:87%; padding:.6rem .85rem; border-radius:14px; font-size:.78rem; line-height:1.65; }
+.ai-msg-wrap.ai .ai-msg-bub { background:#fff; border:1px solid var(--border); border-bottom-left-radius:4px; color:var(--text); }
+.ai-msg-wrap.user .ai-msg-bub { background:var(--g); color:#fff; border-bottom-right-radius:4px; }
+.ai-chat-iw { padding:.65rem .75rem; border-top:1px solid var(--border); display:flex; gap:.45rem; background:#fff; align-items:center; }
+.ai-chat-inp { flex:1; border:1.5px solid var(--border); border-radius:20px; padding:.45rem .85rem; font-family:'Poppins',sans-serif; font-size:.78rem; outline:none; background:#fafaf8; }
+.ai-chat-inp:focus { border-color:var(--red); background:#fff; }
+.ai-chat-send-btn { width:32px; height:32px; border-radius:50%; background:var(--g); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:opacity .15s; }
+.ai-chat-send-btn:hover { opacity:.85; }
 </style>
 </head>
 <body>
@@ -454,6 +559,16 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
             <div class="ov-kpi-trend warn" id="kpi-tickets-trend" style="display:none">awaiting reply</div>
           </div>
         </div>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="ai-insight-card">
+        <div class="ai-insight-header">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div class="ai-insight-label">VistaGusto AI — Weekly Insight</div>
+          <button class="ai-refresh-btn" onclick="loadAIInsights(true)">↻ Refresh</button>
+        </div>
+        <div class="ai-insight-text loading" id="aiInsightText">Analysing your restaurant data…</div>
       </div>
 
       <!-- Chart + Top viewed dishes -->
@@ -1149,6 +1264,21 @@ async function loadOverview(range = '7d') {
         scales: { x: { grid: { display: false }, ticks: { font: { family: 'Poppins', size: 10 } } }, y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.05)' }, ticks: { font: { family: 'Poppins', size: 10 }, stepSize: 1 } } } }
     });
   }, 60);
+
+  aiCtx = {
+    qr_scans_today: scansToday,
+    qr_scans_this_week: scansWeek,
+    qr_scans_last_week: scansWkPrev,
+    menu_views_this_week: menuViews,
+    menu_views_last_week: menuPrev,
+    ar_views_this_week: arViews,
+    views_3d_this_week: views3d,
+    open_tickets: openTickets || 0,
+    top_dish_by_views: topByViews[0]?.name || null,
+    top_dish_by_ar: topByAr[0]?.name || null,
+    period: range,
+  };
+  loadAIInsights();
 }
 
 let perfChart = null;
@@ -1877,7 +2007,104 @@ async function init() {
   badge.style.display = openCount > 0 ? 'inline-flex' : 'none';
 }
 
+/* ── AI ── */
+let aiCtx = {};
+let aiHistory = [];
+
+function buildAICtx() {
+  return {
+    restaurant: currentRestaurant?.name,
+    qr_scans_today: document.getElementById('kpi-scans')?.textContent,
+    qr_scans_this_week: document.getElementById('kpi-scans-week')?.textContent,
+    menu_views_this_week: document.getElementById('kpi-views')?.textContent,
+    open_tickets: document.getElementById('kpi-tickets-count')?.textContent,
+    ...aiCtx,
+  };
+}
+
+async function loadAIInsights() {
+  const el = document.getElementById('aiInsightText');
+  el.classList.add('loading');
+  el.textContent = 'Analysing your restaurant data…';
+  try {
+    const r = await fetch('/api/ai-insights', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ restaurant_name: currentRestaurant?.name || 'your restaurant', data: buildAICtx() }),
+    });
+    const { insight } = await r.json();
+    el.classList.remove('loading');
+    el.textContent = insight || 'No insights available right now.';
+  } catch {
+    el.classList.remove('loading');
+    el.textContent = 'Could not generate insights at this time.';
+  }
+}
+
+function toggleAIChat() {
+  document.getElementById('aiChatPanel').classList.toggle('open');
+}
+
+async function sendAIChat() {
+  const inp = document.getElementById('aiChatInp');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  addAIMsg(msg, 'user');
+  aiHistory.push({ role: 'user', content: msg });
+  addAIMsg('…', 'ai', 'aiTyping');
+  try {
+    const r = await fetch('/api/ai-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: aiHistory, restaurant_name: currentRestaurant?.name || 'your restaurant', context: buildAICtx() }),
+    });
+    const { reply } = await r.json();
+    document.getElementById('aiTyping')?.remove();
+    const text = reply || 'Sorry, I couldn\'t process that.';
+    addAIMsg(text, 'ai');
+    aiHistory.push({ role: 'assistant', content: text });
+  } catch {
+    document.getElementById('aiTyping')?.remove();
+    addAIMsg('Sorry, something went wrong. Please try again.', 'ai');
+  }
+}
+
+function addAIMsg(text, role, id) {
+  const box = document.getElementById('aiChatMsgs');
+  const w = document.createElement('div');
+  w.className = `ai-msg-wrap ${role}`;
+  if (id) w.id = id;
+  w.innerHTML = `<div class="ai-msg-bub">${text}</div>`;
+  box.appendChild(w);
+  box.scrollTop = box.scrollHeight;
+}
+
 window.addEventListener('DOMContentLoaded', init);
 </script>
+  <!-- AI Chat Bubble -->
+  <button class="ai-chat-bubble" onclick="toggleAIChat()" title="Ask VistaGusto AI">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+  </button>
+  <div class="ai-chat-panel" id="aiChatPanel">
+    <div class="ai-chat-ph">
+      <div class="ai-chat-ph-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        VistaGusto AI
+      </div>
+      <button class="ai-chat-ph-close" onclick="toggleAIChat()">✕</button>
+    </div>
+    <div class="ai-chat-msgs" id="aiChatMsgs">
+      <div class="ai-msg-wrap ai">
+        <div class="ai-msg-bub">Hi! I'm your VistaGusto AI assistant. Ask me anything about your restaurant's performance — top dishes, QR scan trends, AR usage, and more.</div>
+      </div>
+    </div>
+    <div class="ai-chat-iw">
+      <input class="ai-chat-inp" id="aiChatInp" type="text" placeholder="Ask anything about your menu…" onkeydown="if(event.key==='Enter')sendAIChat()">
+      <button class="ai-chat-send-btn" onclick="sendAIChat()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
 </body>
 </html>
