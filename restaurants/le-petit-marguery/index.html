@@ -167,6 +167,7 @@ model-viewer{width:100%;height:100%;position:absolute;inset:0;--poster-color:tra
       id="modelViewer"
       camera-controls
       auto-rotate
+      loading="eager"
       ar
       ar-modes="webxr scene-viewer quick-look"
       shadow-intensity="1"
@@ -425,17 +426,19 @@ function open3D(name, glb, usdz, dishId) {
   logEvent('dish_view', dishId || null);
   logEvent('3d_view', dishId || null);
   document.getElementById('viewerTitle').textContent = name;
-  const mv = document.getElementById('modelViewer');
-  if (glb) mv.setAttribute('src', glb);
-  if (usdz) mv.setAttribute('ios-src', usdz);
-  else mv.removeAttribute('ios-src');
   const overlay = document.getElementById('viewerOverlay');
   overlay.classList.add('open');
-  // iOS Safari fix
   document.documentElement.style.overflow = 'hidden';
   document.body.style.overflow = 'hidden';
   document.body.style.position = 'fixed';
   document.body.style.width = '100%';
+  // Set src after overlay is visible so model-viewer has real dimensions
+  requestAnimationFrame(() => {
+    const mv = document.getElementById('modelViewer');
+    if (glb) mv.setAttribute('src', glb);
+    if (usdz) mv.setAttribute('ios-src', usdz);
+    else mv.removeAttribute('ios-src');
+  });
 }
 
 let arPending = null;
