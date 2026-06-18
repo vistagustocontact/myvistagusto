@@ -340,11 +340,11 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
 .empty-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
 .empty-sub{font-size:.76rem}
 /* ── ALLERGENS ── */
-.allergen-grid{display:flex;flex-wrap:wrap;gap:.35rem}
+.allergen-grid{display:flex;flex-wrap:wrap;gap:.45rem}
 .allergen-chip input{display:none}
-.allergen-chip label{display:flex;align-items:center;gap:.28rem;padding:.26rem .6rem;border-radius:20px;border:1.5px solid var(--border);font-size:.68rem;font-weight:500;cursor:pointer;transition:all .15s;color:var(--muted);user-select:none;white-space:nowrap}
-.allergen-chip label:hover{border-color:var(--red);color:var(--red)}
-.allergen-chip input:checked+label{background:#fff0f0;border-color:var(--red);color:var(--red)}
+.allergen-chip label{display:flex;align-items:center;gap:.32rem;padding:.36rem .78rem;border-radius:20px;border:1.5px solid rgba(0,0,0,.09);font-size:.73rem;font-weight:500;cursor:pointer;transition:all .15s;color:#999;user-select:none;white-space:nowrap;background:#f7f7f7}
+.allergen-chip label:hover{border-color:var(--ac);color:var(--ac);background:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 12%,transparent)}
+.allergen-chip input:checked+label{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600;box-shadow:0 2px 8px color-mix(in srgb,var(--ac) 35%,transparent)}
 
 /* ── AI FEATURES ── */
 .ai-insight-card {
@@ -1588,18 +1588,25 @@ async function addDish(e) {
 }
 
 const ALLERGENS = [
-  {id:'gluten',label:'Gluten',emoji:'🌾'},{id:'crustaceans',label:'Crustaceans',emoji:'🦐'},
-  {id:'eggs',label:'Eggs',emoji:'🥚'},{id:'fish',label:'Fish',emoji:'🐟'},
-  {id:'peanuts',label:'Peanuts',emoji:'🥜'},{id:'soybeans',label:'Soybeans',emoji:'🫘'},
-  {id:'milk',label:'Milk',emoji:'🥛'},{id:'nuts',label:'Tree Nuts',emoji:'🌰'},
-  {id:'celery',label:'Celery',emoji:'🥬'},{id:'mustard',label:'Mustard',emoji:'🌻'},
-  {id:'sesame',label:'Sesame',emoji:'⚪'},{id:'sulphites',label:'Sulphites',emoji:'🍇'},
-  {id:'lupin',label:'Lupin',emoji:'🌼'},{id:'molluscs',label:'Molluscs',emoji:'🐚'},
+  {id:'gluten',      label:'Gluten',      emoji:'🌾', color:'#C9871E'},
+  {id:'crustaceans', label:'Crustaceans', emoji:'🦐', color:'#E05A2B'},
+  {id:'eggs',        label:'Eggs',        emoji:'🥚', color:'#D4A800'},
+  {id:'fish',        label:'Fish',        emoji:'🐟', color:'#2E86C1'},
+  {id:'peanuts',     label:'Peanuts',     emoji:'🥜', color:'#8B5E3C'},
+  {id:'soybeans',    label:'Soybeans',    emoji:'🫘', color:'#5A9216'},
+  {id:'milk',        label:'Milk',        emoji:'🥛', color:'#1A9BBF'},
+  {id:'nuts',        label:'Tree Nuts',   emoji:'🌰', color:'#7B4A2D'},
+  {id:'celery',      label:'Celery',      emoji:'🥬', color:'#2E7D32'},
+  {id:'mustard',     label:'Mustard',     emoji:'🌻', color:'#B8860B'},
+  {id:'sesame',      label:'Sesame',      emoji:'🌿', color:'#6D8B3A'},
+  {id:'sulphites',   label:'Sulphites',   emoji:'🍇', color:'#7B3FA0'},
+  {id:'lupin',       label:'Lupin',       emoji:'🌼', color:'#E67E22'},
+  {id:'molluscs',    label:'Molluscs',    emoji:'🐚', color:'#16897A'},
 ];
 
 function renderAllergenChips(selected = []) {
   document.getElementById('editAllergens').innerHTML = ALLERGENS.map(a =>
-    `<div class="allergen-chip"><input type="checkbox" id="al-${a.id}" value="${a.id}"${selected.includes(a.id)?' checked':''}><label for="al-${a.id}">${a.emoji} ${a.label}</label></div>`
+    `<div class="allergen-chip" style="--ac:${a.color}"><input type="checkbox" id="al-${a.id}" value="${a.id}"${selected.includes(a.id)?' checked':''}><label for="al-${a.id}">${a.emoji} ${a.label}</label></div>`
   ).join('');
 }
 
