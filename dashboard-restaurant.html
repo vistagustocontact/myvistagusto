@@ -1365,13 +1365,13 @@ async function loadPerformance(range) {
     growth:   ((dishViewMap[d.id] || 0) - (dishViewPrevMap[d.id] || 0))
   }));
 
-  // Engagement rate = AR views / dish views, only for AR-capable dishes
-  const arDishes = perfEnriched.filter(d => d.has_ar || d.arViews > 0);
+  // Engagement rate = AR views / dish views, only for dishes with actual AR activity
+  const arDishes = perfEnriched.filter(d => d.arViews > 0);
   const arDishViews = arDishes.reduce((s, d) => s + d.views, 0);
   const arDishArViews = arDishes.reduce((s, d) => s + d.arViews, 0);
   const avgEngRate = arDishViews > 0 ? Math.min(100, Math.round((arDishArViews / arDishViews) * 100)) : 0;
 
-  const arDishesPrev = demoDishes.filter(d => d.has_ar || (dishArPrevMap[d.id] || 0) > 0);
+  const arDishesPrev = demoDishes.filter(d => (dishArPrevMap[d.id] || 0) > 0);
   const arDishViewsPrev = arDishesPrev.reduce((s, d) => s + (dishViewPrevMap[d.id] || 0), 0);
   const arDishArViewsPrev = arDishesPrev.reduce((s, d) => s + (dishArPrevMap[d.id] || 0), 0);
   const avgEngRatePrev = arDishViewsPrev > 0 ? Math.min(100, Math.round((arDishArViewsPrev / arDishViewsPrev) * 100)) : 0;
