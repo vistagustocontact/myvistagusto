@@ -1311,13 +1311,13 @@ async function loadPerformance(range) {
   const prev = prevEvts || [];
   const cnt = (arr, type) => arr.filter(e => e.event_type === type).length;
 
-  const qrScans    = cnt(curr, 'qr_scan') || cnt(curr, 'menu_view');
+  const qrScans    = cnt(curr, 'qr_scan');
   const menuViews  = cnt(curr, 'menu_view');
   const dishClicks = cnt(curr, 'dish_view');
   const arViews    = cnt(curr, 'ar_view');
   const arRate     = menuViews > 0 ? ((arViews / menuViews) * 100).toFixed(1) : '0.0';
 
-  const qrPrev    = cnt(prev, 'qr_scan') || cnt(prev, 'menu_view');
+  const qrPrev    = cnt(prev, 'qr_scan');
   const menuPrev  = cnt(prev, 'menu_view');
   const clicksPrev = cnt(prev, 'dish_view');
   const arPrev    = cnt(prev, 'ar_view');
