@@ -33,9 +33,9 @@ module.exports = async function handler(req, res) {
 
     const invoices = invoicesRes.data.map(inv => ({
       date: new Date(inv.created * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-      number: inv.number || inv.id,
-      amount: '€' + (inv.amount_paid / 100).toFixed(0),
-      status: inv.status,
+      number: inv.number || 'Upcoming',
+      amount: '€' + ((inv.amount_paid || inv.amount_due) / 100).toFixed(0),
+      status: inv.status === 'draft' ? 'upcoming' : inv.status,
       pdf: inv.invoice_pdf,
       url: inv.hosted_invoice_url,
     }));
