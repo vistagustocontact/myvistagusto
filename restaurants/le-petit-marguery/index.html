@@ -190,6 +190,17 @@ model-viewer{width:100%;height:100%;position:absolute;inset:0;--poster-color:tra
   </div>
 </div>
 
+<!-- AR CONFIRMATION -->
+<div id="arConfirmOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:flex-end;padding:1.5rem">
+  <div style="background:#1c1c1e;border-radius:20px;padding:1.75rem 1.5rem;width:100%;text-align:center">
+    <div style="font-size:2rem;margin-bottom:.6rem">📷</div>
+    <div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:.4rem">View in Augmented Reality</div>
+    <div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-bottom:1.4rem;line-height:1.6">This will use your camera to place the dish in your space. Make sure camera access is allowed.</div>
+    <button onclick="confirmAR()" style="width:100%;padding:.85rem;background:var(--gold);color:#1a1a1a;border:none;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;margin-bottom:.6rem">Continue</button>
+    <button onclick="closeArConfirm()" style="width:100%;padding:.7rem;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:none;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.82rem;cursor:pointer">Cancel</button>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <div class="footer">
   <div class="footer-text">Powered by</div>
@@ -228,9 +239,15 @@ async function logEvent(type, dishId = null) {
 const dishMap = {};
 
 async function loadMenu() {
-  // Only fire qr_scan when URL has ?qr=1 (i.e. came from scanning the QR code, not typing URL)
-  if (new URLSearchParams(window.location.search).get('qr') === '1') logEvent('qr_scan');
-  logEvent('menu_view');
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('qr') === '1' && !sessionStorage.getItem('vg_qr')) {
+    sessionStorage.setItem('vg_qr', '1');
+    logEvent('qr_scan');
+  }
+  if (!sessionStorage.getItem('vg_view')) {
+    sessionStorage.setItem('vg_view', '1');
+    logEvent('menu_view');
+  }
 
   const { data: dishes, error } = await db
     .from('dishes')
@@ -295,7 +312,7 @@ function renderDish(d, idx) {
   if (has3d) actions.push(`<button class="btn-3d" onclick="event.stopPropagation();open3D(&quot;${safeName}&quot;,&quot;${model.glb}&quot;,&quot;${model.usdz||''}&quot;,'${d.id}')">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>View in 3D
   </button>`);
-  if (hasAr) actions.push(`<button class="btn-ar" onclick="event.stopPropagation();openAR(&quot;${model.usdz}&quot;,'${d.id}')">
+  if (hasAr) actions.push(`<button class="btn-ar" onclick="event.stopPropagation();openAR(&quot;${model.glb||''}&quot;,&quot;${model.usdz}&quot;,'${d.id}')">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>View in AR
   </button>`);
 
@@ -342,7 +359,7 @@ function openDishModal(id) {
   if (has3d) actions.push(`<button class="btn-3d" onclick="closeDishModal();open3D(&quot;${safeName}&quot;,&quot;${model.glb}&quot;,&quot;${model.usdz||''}&quot;,'${id}')">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>View in 3D
   </button>`);
-  if (hasAr) actions.push(`<button class="btn-ar" onclick="closeDishModal();openAR(&quot;${model.usdz}&quot;,'${id}')">
+  if (hasAr) actions.push(`<button class="btn-ar" onclick="closeDishModal();openAR(&quot;${model.glb||''}&quot;,&quot;${model.usdz}&quot;,'${id}')">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>View in AR
   </button>`);
 
@@ -381,6 +398,7 @@ function activateNavBtn(name) {
 }
 
 function open3D(name, glb, usdz, dishId) {
+  logEvent('dish_view', dishId || null);
   logEvent('3d_view', dishId || null);
   document.getElementById('viewerTitle').textContent = name;
   const mv = document.getElementById('modelViewer');
@@ -396,11 +414,31 @@ function open3D(name, glb, usdz, dishId) {
   document.body.style.width = '100%';
 }
 
-function openAR(usdz, dishId) {
-  logEvent('ar_view', dishId || null);
+let arPending = null;
+
+function openAR(glb, usdz, dishId) {
+  arPending = { glb, usdz, dishId };
+  document.getElementById('arConfirmOverlay').style.display = 'flex';
+}
+
+async function confirmAR() {
+  document.getElementById('arConfirmOverlay').style.display = 'none';
+  if (!arPending) return;
+  const { glb, usdz, dishId } = arPending;
+  arPending = null;
+  logEvent('dish_view', dishId || null);
+  await logEvent('ar_view', dishId || null);
   const mv = document.getElementById('modelViewer');
+  if (glb) mv.setAttribute('src', glb);
   if (usdz) mv.setAttribute('ios-src', usdz);
-  mv.activateAR();
+  else mv.removeAttribute('ios-src');
+  await new Promise(r => setTimeout(r, 150));
+  try { mv.activateAR(); } catch (e) { console.warn('AR activation failed:', e); }
+}
+
+function closeArConfirm() {
+  document.getElementById('arConfirmOverlay').style.display = 'none';
+  arPending = null;
 }
 
 function closeViewer() {

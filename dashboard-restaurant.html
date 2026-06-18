@@ -803,7 +803,7 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
           <div class="chart-wrap" style="height:200px"><canvas id="perfScanChart"></canvas></div>
         </div>
         <div class="card" style="overflow:hidden">
-          <div class="card-header"><div class="card-title">Period summary</div></div>
+          <div class="card-header"><div class="card-title">Period summary — <span id="psSummaryLabel">7 days</span></div></div>
           <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:var(--light)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/></svg></span>QR Scans</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-qr">—</span><span class="perf-summary-trend" id="ps-qr-trend"></span></div></div>
           <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#ede9fe"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>Menu views</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-menu">—</span><span class="perf-summary-trend" id="ps-menu-trend"></span></div></div>
           <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#f0fdf4"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/></svg></span>Dish clicks</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-clicks">—</span><span class="perf-summary-trend" id="ps-clicks-trend"></span></div></div>
@@ -1292,6 +1292,8 @@ function perfDishRow(d, i, metricHtml) {
 }
 async function loadPerformance(range) {
   const days = range === 'today' ? 1 : range === '3d' ? 3 : range === '7d' ? 7 : 14;
+  const rangeLabel = { today: 'Today', '3d': 'Last 3 days', '7d': 'Last 7 days', '14d': 'Last 14 days' }[range] || range;
+  document.getElementById('psSummaryLabel').textContent = rangeLabel;
   const now = new Date();
   const periodStart = new Date(now - days * 86400000).toISOString();
   const prevStart   = new Date(now - days * 2 * 86400000).toISOString();
