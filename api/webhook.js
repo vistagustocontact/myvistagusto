@@ -1,7 +1,7 @@
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
 
-module.exports = async function handler(req, res) {
+const handler = async function(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -25,15 +25,18 @@ module.exports = async function handler(req, res) {
 
   try {
     switch (event.type) {
-      case 'invoice.paid':
+      case 'invoice.paid': {
+        const lineEnd = obj.lines?.data?.[0]?.period?.end;
+        const periodEnd = lineEnd || obj.period_end;
         await supabase.from('subscriptions')
           .update({
             status: 'active',
-            next_invoice_date: new Date(obj.period_end * 1000).toISOString().split('T')[0],
+            next_invoice_date: new Date(periodEnd * 1000).toISOString().split('T')[0],
             updated_at: new Date().toISOString()
           })
           .eq('stripe_subscription_id', obj.subscription);
         break;
+      }
 
       case 'invoice.payment_failed':
         await supabase.from('subscriptions')
@@ -63,3 +66,6 @@ module.exports = async function handler(req, res) {
 
   res.json({ received: true });
 };
+
+handler.config = { api: { bodyParser: false } };
+module.exports = handler;

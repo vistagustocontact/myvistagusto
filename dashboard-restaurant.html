@@ -26,55 +26,57 @@
 body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden}
 
 /* ── SIDEBAR ── */
-.sidebar{width:var(--sidebar);min-height:100vh;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow:hidden}
-.sidebar-top{padding:1.1rem 1rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0}
-img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
+.sidebar{width:var(--sidebar);min-height:100vh;background:#fafaf8;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow:hidden}
+.sidebar-top{padding:1.2rem 1rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
+img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%}
 .restaurant-chip{display:flex;align-items:center;gap:.5rem}
-.restaurant-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
-.restaurant-name{font-size:.76rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.restaurant-sub{font-size:.6rem;color:var(--subtle);text-transform:uppercase;letter-spacing:.07em;margin-top:.15rem}
-.sidebar-nav{flex:1;padding:.6rem .55rem;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:.65rem;padding:.6rem .82rem;border-radius:var(--radius-sm);cursor:pointer;color:#666;font-size:.8rem;font-weight:500;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:'Poppins',sans-serif;margin-bottom:.06rem;white-space:nowrap;overflow:hidden}
+.restaurant-chip-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.restaurant-name{font-size:.85rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.restaurant-sub{font-size:.67rem;color:var(--subtle);text-transform:uppercase;letter-spacing:.07em;margin-top:.15rem}
+.sidebar-nav{flex:1;padding:.7rem .6rem;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.72rem .9rem;border-radius:var(--radius-sm);cursor:pointer;color:#666;font-size:.9rem;font-weight:500;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:'Poppins',sans-serif;margin-bottom:.1rem;white-space:nowrap;overflow:hidden}
 .nav-item:hover{background:#f5f5f5;color:var(--text)}
-.nav-item.active{background:var(--red);color:#fff;font-weight:600}
-.nav-icon{width:15px;height:15px;flex-shrink:0;stroke:#aaa;transition:stroke .15s}
+.nav-item.active{background:#fff;color:var(--red);font-weight:600;box-shadow:inset 3px 0 0 0 var(--red),0 1px 6px rgba(0,0,0,.07)}
+.nav-icon{width:18px;height:18px;flex-shrink:0;stroke:#aaa;transition:stroke .15s}
 .nav-item:hover .nav-icon{stroke:var(--text)}
-.nav-item.active .nav-icon{stroke:#fff}
-.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.58rem;font-weight:700;padding:.1rem .4rem;border-radius:50px;min-width:16px;text-align:center;flex-shrink:0}
-.sidebar-footer{padding:.85rem 1rem;border-top:1px solid var(--border);flex-shrink:0}
-.user-row{display:flex;align-items:center;gap:.6rem;overflow:hidden}
-.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0}
+.nav-item.active .nav-icon{stroke:var(--red)}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.63rem;font-weight:700;padding:.12rem .45rem;border-radius:50px;min-width:18px;text-align:center;flex-shrink:0}
+.sidebar-footer{padding:1rem 1rem;border-top:1px solid var(--border);flex-shrink:0}
+.user-row{display:flex;align-items:center;gap:.65rem;overflow:hidden}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0}
 .user-info{flex:1;min-width:0}
-.user-name{font-size:.73rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-role{font-size:.6rem;color:var(--muted)}
+.user-name{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-role{font-size:.67rem;color:var(--muted)}
 .btn-logout{background:none;border:none;cursor:pointer;color:var(--subtle);padding:.3rem;border-radius:6px;transition:color .15s;display:flex;align-items:center;flex-shrink:0}
 .btn-logout:hover{color:var(--red)}
 
 /* ── MAIN ── */
 .main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0}
-.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.6rem;height:56px;box-shadow:0 2px 8px rgba(0,0,0,.03);flex-shrink:0}
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;height:66px;box-shadow:0 2px 8px rgba(0,0,0,.03);flex-shrink:0}
 .topbar-left{min-width:0}
-.topbar-title{font-size:.92rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.topbar-sub{font-size:.68rem;color:var(--muted);margin-top:.05rem}
-.topbar-right{display:flex;align-items:center;gap:.7rem;flex-shrink:0}
+.topbar-title{font-size:1.05rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar-sub{font-size:.76rem;color:var(--muted);margin-top:.07rem}
+.topbar-right{display:flex;align-items:center;gap:.85rem;flex-shrink:0}
 .topbar-date{font-size:.72rem;font-weight:500;color:var(--text);background:#fff;padding:.3rem .85rem;border-radius:8px;white-space:nowrap;border:1px solid var(--border);display:flex;align-items:center;gap:.4rem}
 .topbar-date svg{stroke:var(--muted)}
-.icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s;position:relative}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s;position:relative}
 .icon-btn:hover{border-color:var(--red)}
-.notif-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
 
-.content{flex:1;padding:1.4rem 1.6rem;min-width:0}
+.content{flex:1;padding:1.6rem 1.8rem;min-width:0}
 .section{display:none}
 .section.active{display:block}
 
 /* ── CARDS ── */
-.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
-.card-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
-.card-title{font-size:.83rem;font-weight:700}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:0 4px 18px rgba(0,0,0,.1);transform:translateY(-2px)}
+.card-header{padding:1.05rem 1.3rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.card-title{font-size:1rem;font-weight:700}
 
 /* ── OVERVIEW ── */
 .ov-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
-.ov-kpi{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.2rem 1.3rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem;min-width:0}
+.ov-kpi{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.2rem 1.3rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:1rem;min-width:0;transition:box-shadow .2s,transform .2s}
+.ov-kpi:hover{box-shadow:0 4px 18px rgba(0,0,0,.1);transform:translateY(-2px)}
 .ov-kpi-icon{width:44px;height:44px;border-radius:10px;background:var(--light);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ov-kpi-icon svg{stroke:var(--red);width:20px;height:20px}
 .ov-kpi-body{min-width:0;flex:1}
@@ -87,10 +89,11 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 .ov-mid{display:grid;grid-template-columns:1fr 320px;gap:1.2rem;margin-bottom:1.2rem}
 .ov-bot{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
 
-.ov-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.ov-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s,transform .2s}
+.ov-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.1);transform:translateY(-2px)}
 .ov-card-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.3rem;border-bottom:1px solid var(--border)}
-.ov-card-title{display:flex;align-items:center;gap:.55rem;font-size:.86rem;font-weight:700}
-.ov-card-title svg{stroke:var(--red);width:16px;height:16px}
+.ov-card-title{display:flex;align-items:center;gap:.55rem;font-size:.95rem;font-weight:700}
+.ov-card-title svg{stroke:var(--red);width:17px;height:17px}
 
 .ov-dish-row{display:flex;align-items:center;gap:.8rem;padding:.85rem 1.2rem;border-bottom:1px solid rgba(0,0,0,.05)}
 .ov-dish-row:last-child{border-bottom:none}
@@ -122,8 +125,9 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 
 /* keep these for other sections */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.1rem}
-.kpi-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1rem 1.1rem;box-shadow:var(--shadow);position:relative;overflow:hidden;min-width:0}
-.kpi-label{font-size:.64rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
+.kpi-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1rem 1.1rem;box-shadow:var(--shadow);position:relative;overflow:hidden;min-width:0;transition:box-shadow .2s,transform .2s}
+.kpi-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.1);transform:translateY(-2px)}
+.kpi-label{font-size:.71rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
 .kpi-value{font-size:1.4rem;font-weight:700;line-height:1.1;margin-bottom:.12rem}
 .kpi-sub{font-size:.67rem;color:var(--muted)}
 .kpi-up{color:var(--green);font-weight:600}
@@ -141,14 +145,14 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 .dish-row:last-child{border-bottom:none}
 .dish-rank{width:20px;font-size:.7rem;font-weight:700;color:var(--subtle);flex-shrink:0;text-align:center}
 .dish-img{width:34px;height:34px;border-radius:7px;object-fit:cover;flex-shrink:0;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
-.dish-name{flex:1;font-size:.78rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.dish-views{font-size:.72rem;color:var(--muted);flex-shrink:0;white-space:nowrap}
+.dish-name{flex:1;font-size:.85rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.dish-views{font-size:.78rem;color:var(--muted);flex-shrink:0;white-space:nowrap}
 
 /* ── PERF SUMMARY ── */
 .perf-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1.1rem;border-bottom:1px solid rgba(0,0,0,.05)}
 .perf-row:last-child{border-bottom:none}
-.perf-label{font-size:.75rem;color:var(--muted)}
-.perf-val{font-size:.78rem;font-weight:700;color:var(--text)}
+.perf-label{font-size:.82rem;color:var(--muted)}
+.perf-val{font-size:.85rem;font-weight:700;color:var(--text)}
 
 /* ── BADGES ── */
 .badge{display:inline-flex;align-items:center;padding:.18rem .5rem;border-radius:50px;font-size:.64rem;font-weight:600;white-space:nowrap}
@@ -162,28 +166,28 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 .badge-starter{background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb}
 
 /* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.48rem .9rem;border-radius:7px;font-family:'Poppins',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;text-decoration:none;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.54rem 1.05rem;border-radius:7px;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;text-decoration:none;white-space:nowrap}
 .btn-primary{background:var(--g);color:#fff}
 .btn-primary:hover{opacity:.88}
 .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
 .btn-ghost:hover{background:#f5f5f5;color:var(--text)}
 .btn-outline{background:#fff;color:var(--red);border:1.5px solid rgba(240,107,113,.3)}
 .btn-outline:hover{background:var(--light)}
-.btn-sm{padding:.26rem .62rem;font-size:.7rem}
+.btn-sm{padding:.33rem .72rem;font-size:.77rem}
 .btn-danger{background:rgba(240,107,113,.08);color:var(--red);border:1px solid rgba(240,107,113,.2)}
 
 /* ── FILTERS ── */
 .filter-bar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
-.filter-btn{padding:.28rem .75rem;border-radius:50px;border:1.5px solid var(--border);background:#fff;font-family:'Poppins',sans-serif;font-size:.7rem;font-weight:500;cursor:pointer;color:#666;transition:all .15s;white-space:nowrap}
+.filter-btn{padding:.35rem .88rem;border-radius:50px;border:1.5px solid var(--border);background:#fff;font-family:'Poppins',sans-serif;font-size:.77rem;font-weight:500;cursor:pointer;color:#666;transition:all .15s;white-space:nowrap}
 .filter-btn.active{background:var(--light);border-color:var(--red);color:var(--red);font-weight:600}
-.search-input{padding:.38rem .8rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Poppins',sans-serif;font-size:.77rem;outline:none;transition:border-color .2s;background:#fff;color:var(--text)}
+.search-input{padding:.45rem .9rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Poppins',sans-serif;font-size:.84rem;outline:none;transition:border-color .2s;background:#fff;color:var(--text)}
 .search-input:focus{border-color:var(--red)}
 
 /* ── TABLE ── */
 .table-wrap{overflow-x:auto;width:100%}
 .data-table{width:100%;border-collapse:collapse}
-.data-table th{background:#f9f8f7;padding:.6rem 1rem;text-align:left;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap}
-.data-table td{padding:.7rem 1rem;font-size:.77rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table th{background:#f9f8f7;padding:.72rem 1.1rem;text-align:left;font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:.82rem 1.1rem;font-size:.85rem;border-bottom:1px solid var(--border);vertical-align:middle}
 .data-table tbody tr:last-child td{border-bottom:none}
 .data-table tbody tr:hover td{background:#fafafa}
 
@@ -203,7 +207,7 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 .ticket-item{padding:.75rem .9rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
 .ticket-item:hover{background:#fafafa}
 .ticket-item.active{background:var(--light)}
-.ti-subject{font-size:.75rem;font-weight:600;margin-bottom:.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ti-subject{font-size:.82rem;font-weight:600;margin-bottom:.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ti-meta{display:flex;align-items:center;gap:.3rem;margin-top:.2rem;flex-wrap:wrap}
 .chat-panel{background:#fff;border-radius:var(--radius);border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .chat-header{padding:.85rem 1.2rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:.7rem}
@@ -241,27 +245,30 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 .modal-close:hover{color:var(--red)}
 .modal-footer{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1.1rem}
 .fg{margin-bottom:.85rem}
-.fg label{display:block;font-size:.67rem;font-weight:600;color:#555;margin-bottom:.28rem;letter-spacing:.02em;text-transform:uppercase}
-.fg input,.fg select,.fg textarea{width:100%;padding:.6rem .8rem;border:1.5px solid rgba(0,0,0,.1);border-radius:7px;font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--text);outline:none;transition:border-color .2s;background:#fff}
+.fg label{display:block;font-size:.74rem;font-weight:600;color:#555;margin-bottom:.28rem;letter-spacing:.02em;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{width:100%;padding:.68rem .9rem;border:1.5px solid rgba(0,0,0,.1);border-radius:7px;font-family:'Poppins',sans-serif;font-size:.88rem;color:var(--text);outline:none;transition:border-color .2s;background:#fff}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red)}
 .fg textarea{resize:vertical;min-height:80px}
 
 /* ── SUBSCRIPTION ── */
 .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.plan-feature{display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.78rem}
+.plan-feature{display:flex;align-items:center;gap:.6rem;padding:.6rem 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.84rem}
 .plan-feature:last-child{border-bottom:none}
 .plan-feature svg{stroke:var(--green);flex-shrink:0}
-.invoice-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1rem;border-bottom:1px solid var(--border);font-size:.77rem}
+.invoice-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid var(--border);font-size:.83rem}
 .invoice-row:last-child{border-bottom:none}
 
 /* ── SETTINGS ── */
 .settings-section{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.4rem;margin-bottom:1rem;box-shadow:var(--shadow)}
-.settings-title{font-size:.85rem;font-weight:700;margin-bottom:1rem}
+.settings-title{font-size:.93rem;font-weight:700;margin-bottom:1rem}
 .logo-upload{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:1.4rem;text-align:center;cursor:pointer;transition:border-color .15s;position:relative}
 .logo-upload:hover{border-color:var(--red)}
 .password-rule{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--muted);margin-bottom:.25rem}
 .password-rule.ok{color:var(--green)}
 .password-rule svg{flex-shrink:0}
+
+/* ── SECTION HEADERS ── */
+.section h2{border-left:3px solid var(--red);padding-left:.65rem;font-size:1.1rem!important}
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:4px;height:4px}
@@ -284,7 +291,7 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 .cta-deco{font-size:1.8rem;flex-shrink:0;opacity:.5}
 
 /* ── PERF 6-COL KPIS ── */
-.perf-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:.65rem;margin-bottom:1rem}
+.perf-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:1rem}
 .perf-kpi{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:.85rem 1rem;box-shadow:var(--shadow);min-width:0}
 .perf-kpi-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:.5rem}
 .perf-kpi-label{font-size:.62rem;color:var(--muted);font-weight:500;margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -341,8 +348,10 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
   <div class="sidebar-top">
     <img src="logo1.png" alt="VistaGusto" class="sidebar-logo">
     <div class="restaurant-chip">
-      <div class="restaurant-chip-dot"></div>
-      <div>
+      <div id="sidebarLogo" style="width:32px;height:32px;border-radius:8px;background:var(--light);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center">
+        <div class="restaurant-chip-dot"></div>
+      </div>
+      <div style="min-width:0;flex:1">
         <div class="restaurant-name" id="sidebarRestName"></div>
         <div class="restaurant-sub">myvistagusto.com</div>
       </div>
@@ -397,10 +406,12 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
       <div class="topbar-sub" id="topbarSub">Here's an overview of your menu's activity</div>
     </div>
     <div class="topbar-right">
-      <div class="topbar-date" id="topbarDate">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span id="topbarDateText">—</span>
-      </div>
+      <span id="topbarDateText" style="display:none">—</span>
+      <button class="icon-btn" onclick="showSection('tickets',document.querySelectorAll('.nav-item')[3])" title="Support tickets">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="notif-dot" id="topbarNotifDot" style="display:none"></span>
+      </button>
+      <div class="user-avatar" id="topbarAvatar" style="width:40px;height:40px;font-size:.78rem;cursor:pointer" onclick="showSection('settings',document.querySelectorAll('.nav-item')[5])" title="Settings">—</div>
     </div>
   </div>
 
@@ -512,7 +523,7 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
           <div style="font-size:.72rem;color:var(--muted)">Edit your dishes, prices and descriptions. Changes are saved instantly.</div>
         </div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <a class="btn btn-ghost btn-sm" href="le-petit-marguery.html?internal=1" target="_blank">View public menu</a>
+          <a class="btn btn-ghost btn-sm" href="restaurants/le-petit-marguery/?internal=1" target="_blank">View public menu</a>
           <button class="btn btn-primary btn-sm" onclick="openModal('addDishModal')">+ Add dish</button>
         </div>
       </div>
@@ -768,7 +779,7 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
           <h2 style="font-size:1rem;font-weight:700;margin-bottom:.1rem">Subscription & Billing</h2>
           <div style="font-size:.72rem;color:var(--muted)">Manage your subscription and view your invoices.</div>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="showToast('Contacting billing team')">Contact billing</button>
+        <button class="btn btn-ghost btn-sm" onclick="window.location.href='mailto:vistagustocontact@gmail.com?subject=Billing enquiry'">Contact billing</button>
       </div>
 
       <!-- Plan summary top row -->
@@ -776,7 +787,7 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
         <div class="kpi-card"><div class="kpi-label">Current plan</div><div class="kpi-value" style="font-size:1.3rem" id="subPlan">—</div><div class="kpi-sub"><span class="badge badge-active" id="subStatus">—</span></div></div>
         <div class="kpi-card"><div class="kpi-label">Monthly price</div><div class="kpi-value" style="font-size:1.3rem" id="subPrice">—</div><div class="kpi-sub">billed monthly</div></div>
         <div class="kpi-card"><div class="kpi-label">Next renewal</div><div class="kpi-value" style="font-size:1.1rem" id="subRenewal">—</div><div class="kpi-sub">auto-renews</div></div>
-        <div class="kpi-card"><div class="kpi-label">Payment method</div><div class="kpi-value" style="font-size:1rem;margin-top:.25rem" id="subPayment">—</div><div class="kpi-sub"><a href="#" style="color:var(--red);font-size:.68rem;font-weight:600" onclick="showToast('Redirecting to billing portal')">Update →</a></div></div>
+        <div class="kpi-card"><div class="kpi-label">Payment method</div><div class="kpi-value" style="font-size:1rem;margin-top:.25rem" id="subPayment">—</div><div class="kpi-sub"><a href="#" style="color:var(--red);font-size:.68rem;font-weight:600" onclick="openBillingPortal(event)">Update →</a></div></div>
       </div>
 
       <div class="sub-grid">
@@ -789,17 +800,14 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
             <div class="plan-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Priority support</div>
             <div class="plan-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Real-time analytics</div>
             <div style="margin-top:1rem">
-              <button class="btn btn-outline btn-sm" onclick="showToast('Redirecting to plan options')">Change plan</button>
+              <button class="btn btn-outline btn-sm" onclick="window.location.href='mailto:vistagustocontact@gmail.com?subject=Plan change request'">Contact us to change plan</button>
             </div>
           </div>
         </div>
         <div class="card" style="overflow:hidden">
           <div class="card-header"><div class="card-title">Payment history</div></div>
           <div id="invoiceList">
-            <div class="invoice-row"><span style="color:var(--muted)">12 Jun 2026</span><span>#VG-2026-031</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
-            <div class="invoice-row"><span style="color:var(--muted)">12 May 2026</span><span>#VG-2026-028</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
-            <div class="invoice-row"><span style="color:var(--muted)">12 Apr 2026</span><span>#VG-2026-024</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
-            <div class="invoice-row"><span style="color:var(--muted)">12 Mar 2026</span><span>#VG-2026-019</span><span style="font-weight:600">€149</span><span><span class="badge badge-active">Paid</span></span></div>
+            <div style="padding:1rem;text-align:center;font-size:.75rem;color:var(--muted)">Loading…</div>
           </div>
         </div>
       </div>
@@ -831,17 +839,18 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 
           <div class="settings-section">
             <div class="settings-title">Restaurant Info</div>
-            <div class="fg"><label>Restaurant name</label><input type="text" id="restName" placeholder="Your restaurant name"></div>
-            <div class="fg"><label>Phone number</label><input type="tel" id="restPhone" placeholder="+33 1 23 45 67 89"></div>
-            <div class="fg"><label>Address</label><input type="text" id="restAddress" placeholder="12 Rue de la Paix, Paris"></div>
-            <button class="btn btn-primary btn-sm" onclick="saveRestaurantInfo()">Save changes</button>
+            <div class="fg"><label>Restaurant name</label><input type="text" id="restName" placeholder="Your restaurant name" readonly style="background:#f9f9f9;color:var(--muted)"></div>
+            <div class="fg"><label>Email</label><input type="email" id="restEmail" placeholder="contact@restaurant.com" readonly style="background:#f9f9f9;color:var(--muted)"></div>
+            <div class="fg"><label>Phone number</label><input type="tel" id="restPhone" placeholder="+33 1 23 45 67 89" readonly style="background:#f9f9f9;color:var(--muted)"></div>
+            <div class="fg"><label>Address</label><input type="text" id="restAddress" placeholder="12 Rue de la Paix, Paris" readonly style="background:#f9f9f9;color:var(--muted)"></div>
+            <div style="font-size:.72rem;color:var(--muted)">To update your info contact the VistaGusto team.</div>
           </div>
 
           <div class="settings-section" style="border:1px solid rgba(240,107,113,.2);background:rgba(240,107,113,.02)">
             <div class="settings-title" style="color:var(--red)">Danger zone</div>
             <div style="font-size:.75rem;color:var(--muted);margin-bottom:.9rem;line-height:1.6">These actions are irreversible. Please be certain before proceeding.</div>
             <div style="display:flex;flex-direction:column;gap:.5rem">
-              <button class="btn btn-danger btn-sm" onclick="showToast('Contact support to deactivate your account')">Deactivate account</button>
+              <button class="btn btn-danger btn-sm" onclick="deactivateAccount()">Deactivate account</button>
             </div>
           </div>
 
@@ -849,14 +858,6 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
 
         <!-- RIGHT COLUMN -->
         <div style="display:flex;flex-direction:column;gap:1rem">
-
-          <div class="settings-section">
-            <div class="settings-title">Account Email</div>
-            <div style="font-size:.74rem;color:var(--muted);margin-bottom:.85rem;line-height:1.55">A verification link will be sent to the new address before the change takes effect.</div>
-            <div class="fg"><label>Current email</label><input type="email" id="currentEmail" readonly style="background:#f9f9f9;color:var(--muted)"></div>
-            <div class="fg"><label>New email address</label><input type="email" id="newEmail" placeholder="new@email.com"></div>
-            <button class="btn btn-primary btn-sm" onclick="updateEmail()">Save new email</button>
-          </div>
 
           <div class="settings-section">
             <div class="settings-title">Change Password</div>
@@ -875,15 +876,15 @@ img.sidebar-logo{height:68px;display:block;margin-bottom:.6rem;max-width:100%}
             <div class="settings-title">Your QR Code</div>
             <div style="font-size:.74rem;color:var(--muted);margin-bottom:.85rem;line-height:1.55">Place this QR code on your tables. Customers scan it to view your 3D menu.</div>
             <div style="background:#f9f8f7;border-radius:10px;padding:1.2rem;display:flex;align-items:center;gap:1rem">
-              <div style="width:72px;height:72px;background:#1a1a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M16 21h.01"/><path d="M21 21h.01"/></svg>
+              <div id="qrCodeImg" style="width:72px;height:72px;flex-shrink:0;border-radius:8px;overflow:hidden;background:#f5f5f5;display:flex;align-items:center;justify-content:center">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/></svg>
               </div>
-              <div>
-                <div style="font-size:.78rem;font-weight:600;margin-bottom:.3rem">le-petit-marguery</div>
-                <div style="font-size:.69rem;color:var(--muted);margin-bottom:.6rem">myvistagusto.com/le-petit-marguery</div>
+              <div style="min-width:0;flex:1">
+                <div style="font-size:.78rem;font-weight:600;margin-bottom:.2rem" id="qrSlug">—</div>
+                <div style="font-size:.69rem;color:var(--muted);margin-bottom:.6rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="qrUrl">—</div>
                 <div style="display:flex;gap:.4rem">
-                  <button class="btn btn-primary btn-sm" onclick="showToast('QR Code downloaded','success')">Download</button>
-                  <button class="btn btn-ghost btn-sm" onclick="showToast('Link copied','success')">Copy link</button>
+                  <button class="btn btn-primary btn-sm" onclick="downloadQR()">Download</button>
+                  <button class="btn btn-ghost btn-sm" onclick="copyMenuLink()">Copy link</button>
                 </div>
               </div>
             </div>
@@ -1001,6 +1002,7 @@ function showSection(name, btn) {
   if (name === 'performance') loadPerformance('7d');
   if (name === 'tickets') loadTickets();
   if (name === 'subscription') loadSubscription();
+  if (name === 'settings') loadQRCode();
 }
 
 /* ── OVERVIEW ── */
@@ -1503,6 +1505,7 @@ async function loadTickets() {
   const badge = document.getElementById('ticketBadge');
   badge.textContent = open;
   badge.style.display = open > 0 ? 'inline-flex' : 'none';
+  document.getElementById('topbarNotifDot').style.display = open > 0 ? 'block' : 'none';
   renderTickets();
   if (demoTickets.length) selectTicket(0);
 }
@@ -1666,11 +1669,22 @@ async function updatePassword() {
   document.getElementById('newPassword').value = '';
   document.getElementById('confirmPassword').value = '';
 }
+async function deactivateAccount() {
+  if (!confirm('This will permanently delete your restaurant, all dishes, tickets and analytics. This cannot be undone. Are you sure?')) return;
+  if (!confirm('Last warning — this deletes everything. Continue?')) return;
+  // Cascading deletes handle dishes, menus, categories, tickets, analytics, subscriptions
+  await db.from('profiles').update({ restaurant_id: null }).eq('id', (await db.auth.getUser()).data.user.id);
+  await db.from('restaurants').delete().eq('id', RESTAURANT_ID);
+  await db.auth.signOut();
+  window.location.href = 'index.html';
+}
+
 async function saveRestaurantInfo() {
   const name = document.getElementById('restName').value.trim();
+  const email = document.getElementById('restEmail').value.trim();
   const phone = document.getElementById('restPhone').value.trim();
   const address = document.getElementById('restAddress').value.trim();
-  const { error } = await db.from('restaurants').update({ name, phone, address, updated_at: new Date().toISOString() }).eq('id', RESTAURANT_ID);
+  const { error } = await db.from('restaurants').update({ name, email, phone, address, updated_at: new Date().toISOString() }).eq('id', RESTAURANT_ID);
   if (error) { showToast('Error saving info'); return; }
   if (currentRestaurant) currentRestaurant.name = name;
   document.getElementById('sidebarRestName').textContent = name;
@@ -1694,11 +1708,48 @@ async function previewEditPhoto(input) {
   showToast('Photo saved', 'success');
 }
 
-function previewLogo(input) {
+async function previewLogo(input) {
   if (!input.files[0]) return;
+  const file = input.files[0];
   const reader = new FileReader();
   reader.onload = e => { document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" style="height:64px;border-radius:8px;margin:0 auto;display:block">`; };
-  reader.readAsDataURL(input.files[0]);
+  reader.readAsDataURL(file);
+
+  const path = `logos/${RESTAURANT_ID}_${Date.now()}.${file.name.split('.').pop()}`;
+  const { error: upErr } = await db.storage.from('logos').upload(path, file, { upsert: true });
+  if (upErr) { showToast('Logo upload failed: ' + upErr.message); return; }
+  const { data: { publicUrl } } = db.storage.from('logos').getPublicUrl(path);
+  const { error } = await db.from('restaurants').update({ logo_url: publicUrl, updated_at: new Date().toISOString() }).eq('id', RESTAURANT_ID);
+  if (error) { showToast('Error saving logo'); return; }
+  document.getElementById('sidebarLogo').innerHTML = `<img src="${publicUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:8px">`;
+  showToast('Logo saved', 'success');
+}
+
+function loadQRCode() {
+  const slug = currentRestaurant?.slug || 'le-petit-marguery';
+  const url = `https://myvistagusto.vercel.app/restaurants/${slug}/?qr=1`;
+  document.getElementById('qrSlug').textContent = slug;
+  document.getElementById('qrUrl').textContent = url;
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
+  document.getElementById('qrCodeImg').innerHTML = `<img src="${qrApiUrl}" style="width:72px;height:72px;object-fit:cover">`;
+}
+
+async function downloadQR() {
+  const slug = currentRestaurant?.slug || 'le-petit-marguery';
+  const url = `https://myvistagusto.vercel.app/restaurants/${slug}/?qr=1`;
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(url)}`;
+  const a = document.createElement('a');
+  a.href = qrApiUrl;
+  a.download = `${slug}-qr.png`;
+  a.target = '_blank';
+  a.click();
+  showToast('QR Code downloaded', 'success');
+}
+
+function copyMenuLink() {
+  const slug = currentRestaurant?.slug || 'le-petit-marguery';
+  const url = `https://myvistagusto.vercel.app/restaurants/${slug}/?qr=1`;
+  navigator.clipboard.writeText(url).then(() => showToast('Link copied', 'success'));
 }
 
 /* ── CHART FILTER ── */
@@ -1707,7 +1758,7 @@ function setChartFilter(range) { loadOverview(range); }
 /* ── UTILS ── */
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-async function logout() { await db.auth.signOut(); window.location.href = 'login.html'; }
+async function logout() { await db.auth.signOut(); window.location.href = 'index.html'; }
 let toastTimer;
 function showToast(msg, type) {
   const t = document.getElementById('toast');
@@ -1717,37 +1768,74 @@ function showToast(msg, type) {
 
 /* ── SUBSCRIPTION ── */
 async function loadSubscription() {
-  const { data: sub } = await db.from('subscriptions').select('*').eq('restaurant_id', RESTAURANT_ID).single();
   const planLabels = { starter: 'Starter', premium: 'Premium', enterprise: 'Enterprise' };
   const planPrices = { starter: '€79', premium: '€149', enterprise: 'Custom' };
-  const plan = sub?.plan || currentRestaurant?.plan || 'starter';
-  const status = sub?.status || currentRestaurant?.status || 'trial';
-  const price = sub?.price_monthly ? '€' + parseFloat(sub.price_monthly).toFixed(0) : planPrices[plan] || '—';
-  const renewal = sub?.next_invoice_date ? new Date(sub.next_invoice_date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : '—';
-  const payment = sub?.payment_method || '—';
 
-  document.getElementById('subPlan').textContent = planLabels[plan] || plan;
-  document.getElementById('subPrice').textContent = price;
-  document.getElementById('subRenewal').textContent = renewal;
-  document.getElementById('subPayment').textContent = payment;
-  document.getElementById('subPlanTitle').textContent = 'Your VistaGusto Plan — ' + (planLabels[plan] || plan);
+  try {
+    const res = await fetch(`/api/billing-info?restaurant_id=${RESTAURANT_ID}`);
+    const { sub, invoices, paymentMethod } = await res.json();
 
-  const statusEl = document.getElementById('subStatus');
-  statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-  statusEl.className = 'badge ' + (status === 'active' ? 'badge-active' : status === 'trial' ? 'badge-starter' : 'badge');
+    const plan = sub?.plan || 'starter';
+    const status = sub?.status || 'trial';
+    const price = sub?.price_monthly ? '€' + parseFloat(sub.price_monthly).toFixed(0) : planPrices[plan] || '—';
+    const renewal = sub?.next_invoice_date ? new Date(sub.next_invoice_date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : '—';
+    const payment = paymentMethod
+      ? paymentMethod.brand.charAt(0).toUpperCase() + paymentMethod.brand.slice(1) + ' ···· ' + paymentMethod.last4
+      : '—';
 
-  document.getElementById('invoiceList').innerHTML = `<div style="padding:1rem;text-align:center;font-size:.75rem;color:var(--muted)">Invoice history available once Stripe is connected.</div>`;
+    document.getElementById('subPlan').textContent = planLabels[plan] || plan;
+    document.getElementById('subPrice').textContent = price;
+    document.getElementById('subRenewal').textContent = renewal;
+    document.getElementById('subPayment').textContent = payment;
+    document.getElementById('subPlanTitle').textContent = 'Your VistaGusto Plan — ' + (planLabels[plan] || plan);
+
+    const statusEl = document.getElementById('subStatus');
+    statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    statusEl.className = 'badge ' + (status === 'active' ? 'badge-active' : status === 'trial' ? 'badge-starter' : 'badge');
+
+    const invoiceList = document.getElementById('invoiceList');
+    if (!invoices || invoices.length === 0) {
+      invoiceList.innerHTML = `<div style="padding:1rem;text-align:center;font-size:.75rem;color:var(--muted)">No invoices yet.</div>`;
+    } else {
+      invoiceList.innerHTML = invoices.map(inv => `
+        <div class="invoice-row">
+          <span style="color:var(--muted)">${inv.date}</span>
+          <span>${inv.number}</span>
+          <span style="font-weight:600">${inv.amount}</span>
+          <span><span class="badge ${inv.status === 'paid' ? 'badge-active' : 'badge'}">${inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}</span></span>
+          ${inv.pdf ? `<span><a href="${inv.pdf}" target="_blank" rel="noopener" style="color:var(--red);font-size:.68rem;font-weight:600">PDF →</a></span>` : '<span></span>'}
+        </div>`).join('');
+    }
+  } catch (err) {
+    console.error('loadSubscription error:', err);
+  }
+}
+
+async function openBillingPortal(e) {
+  if (e) e.preventDefault();
+  showToast('Opening billing portal…');
+  try {
+    const res = await fetch('/api/billing-portal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ restaurant_id: RESTAURANT_ID, return_url: window.location.href }),
+    });
+    const { url, error } = await res.json();
+    if (error) { showToast('Billing portal unavailable'); return; }
+    window.open(url, '_blank', 'noopener');
+  } catch (err) {
+    showToast('Could not open billing portal');
+  }
 }
 
 /* ── INIT ── */
 async function init() {
   const { data: { session } } = await db.auth.getSession();
 
-  if (!session) { window.location.href = 'login.html'; return; }
+  if (!session) { window.location.href = 'index.html'; return; }
   const { data: profile } = await db.from('profiles').select('role, restaurant_id').eq('id', session.user.id).single();
-  if (!profile || profile.role !== 'restaurant') { await db.auth.signOut(); window.location.href = 'login.html'; return; }
+  if (!profile || profile.role !== 'restaurant') { await db.auth.signOut(); window.location.href = 'index.html'; return; }
   RESTAURANT_ID = profile.restaurant_id;
-  document.getElementById('currentEmail').value = session.user.email || '';
 
   if (RESTAURANT_ID) {
     const { data: restaurant } = await db.from('restaurants').select('*').eq('id', RESTAURANT_ID).single();
@@ -1756,11 +1844,17 @@ async function init() {
     if (restaurant) {
       document.getElementById('sidebarRestName').textContent = restName;
       document.getElementById('topbarTitle').textContent = 'Welcome, ' + restName;
+      const initials = restName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('topbarAvatar').textContent = initials;
+      document.getElementById('userAvatarSidebar').textContent = initials;
+      document.getElementById('userNameSidebar').textContent = restName;
       document.getElementById('restName').value = restaurant.name || '';
+      document.getElementById('restEmail').value = restaurant.email || '';
       document.getElementById('restPhone').value = restaurant.phone || '';
       document.getElementById('restAddress').value = restaurant.address || '';
       if (restaurant.logo_url) {
         document.getElementById('logoPreview').innerHTML = `<img src="${restaurant.logo_url}" style="height:64px;border-radius:8px;margin:0 auto;display:block">`;
+        document.getElementById('sidebarLogo').innerHTML = `<img src="${restaurant.logo_url}" style="width:32px;height:32px;object-fit:cover;border-radius:8px">`;
       }
     }
   }
