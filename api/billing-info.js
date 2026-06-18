@@ -31,14 +31,18 @@ module.exports = async function handler(req, res) {
       ? { brand: paymentMethodsRes.data[0].card.brand, last4: paymentMethodsRes.data[0].card.last4 }
       : null;
 
-    const invoices = invoicesRes.data.map(inv => ({
-      date: new Date(inv.created * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-      number: inv.number || 'Upcoming',
-      amount: '€' + ((inv.amount_paid || inv.amount_due) / 100).toFixed(0),
-      status: inv.status === 'draft' ? 'upcoming' : inv.status,
-      pdf: inv.invoice_pdf,
-      url: inv.hosted_invoice_url,
-    }));
+    const invoices = invoicesRes.data.map(inv => {
+      const isDraft = inv.status === 'draft';
+      const dateTs = isDraft ? (inv.next_payment_attempt || inv.period_end || inv.created) : inv.created;
+      return {
+        date: new Date(dateTs * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+        number: inv.number || 'Upcoming',
+        amount: '€' + ((inv.amount_paid || inv.amount_due) / 100).toFixed(0),
+        status: isDraft ? 'upcoming' : inv.status,
+        pdf: inv.invoice_pdf,
+        url: inv.hosted_invoice_url,
+      };
+    });
 
     res.json({ sub, invoices, paymentMethod });
   } catch (err) {
