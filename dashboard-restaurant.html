@@ -1337,41 +1337,13 @@ async function loadPerformance(range) {
   const menuViews  = cnt(curr, 'menu_view');
   const dishClicks = cnt(curr, 'dish_view');
   const arViews    = cnt(curr, 'ar_view');
-  const arRate     = menuViews > 0 ? Math.min(100, (arViews / menuViews) * 100).toFixed(1) : '0.0';
 
   const qrPrev    = cnt(prev, 'qr_scan');
   const menuPrev  = cnt(prev, 'menu_view');
   const clicksPrev = cnt(prev, 'dish_view');
   const arPrev    = cnt(prev, 'ar_view');
-  const arRatePrev = menuPrev > 0 ? (arPrev / menuPrev * 100) : 0;
 
-  const tStr = (c, p) => { const t = trendStr(c, p); return t ? `<span class="perf-kpi-trend${t.up ? '' : ' down'}">${t.up ? '↑ +' : '↓ '}${Math.abs(t.pct)}%</span>` : ''; };
-
-  // 6 KPI cards
-  document.getElementById('p-qr').textContent    = qrScans.toLocaleString();
-  document.getElementById('p-menu').textContent  = menuViews.toLocaleString();
-  document.getElementById('p-clicks').textContent = dishClicks.toLocaleString();
-  document.getElementById('p-ar').textContent    = arViews.toLocaleString();
-  document.getElementById('p-rate').textContent  = arRate + '%';
-  document.getElementById('p-qr-trend').innerHTML    = tStr(qrScans, qrPrev);
-  document.getElementById('p-menu-trend').innerHTML  = tStr(menuViews, menuPrev);
-  document.getElementById('p-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
-  document.getElementById('p-ar-trend').innerHTML    = tStr(arViews, arPrev);
-  document.getElementById('p-rate-trend').innerHTML  = tStr(parseFloat(arRate), arRatePrev);
-
-  // Period summary panel
-  document.getElementById('ps-qr').textContent     = qrScans.toLocaleString();
-  document.getElementById('ps-menu').textContent   = menuViews.toLocaleString();
-  document.getElementById('ps-clicks').textContent = dishClicks.toLocaleString();
-  document.getElementById('ps-ar-val').textContent = arViews.toLocaleString();
-  document.getElementById('ps-rate-val').textContent = arRate + '%';
-  document.getElementById('ps-qr-trend').innerHTML     = tStr(qrScans, qrPrev);
-  document.getElementById('ps-menu-trend').innerHTML   = tStr(menuViews, menuPrev);
-  document.getElementById('ps-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
-  document.getElementById('ps-ar-trend').innerHTML     = tStr(arViews, arPrev);
-  document.getElementById('ps-rate-trend').innerHTML   = tStr(parseFloat(arRate), arRatePrev);
-
-  // Dish-level maps
+  // Dish-level maps (built first so engagement rate can use per-dish averages)
   const dishViewMap = {}, dishArMap = {}, dishViewPrevMap = {}, dishArPrevMap = {};
   curr.forEach(e => {
     if (!e.dish_id) return;
@@ -1392,6 +1364,42 @@ async function loadPerformance(range) {
     engRate:  (dishViewMap[d.id] || 0) > 0 ? Math.min(100, Math.round(((dishArMap[d.id] || 0) / dishViewMap[d.id]) * 100)) : 0,
     growth:   ((dishViewMap[d.id] || 0) - (dishViewPrevMap[d.id] || 0))
   }));
+
+  // Engagement rate = average of per-dish engagement rates (dishes with at least 1 view)
+  const activeDishes = perfEnriched.filter(d => d.views > 0);
+  const avgEngRate = activeDishes.length > 0
+    ? Math.round(activeDishes.reduce((sum, d) => sum + d.engRate, 0) / activeDishes.length)
+    : 0;
+  const prevActiveDishes = demoDishes.filter(d => (dishViewPrevMap[d.id] || 0) > 0);
+  const avgEngRatePrev = prevActiveDishes.length > 0
+    ? Math.round(prevActiveDishes.reduce((sum, d) => sum + Math.min(100, Math.round(((dishArPrevMap[d.id] || 0) / dishViewPrevMap[d.id]) * 100)), 0) / prevActiveDishes.length)
+    : 0;
+
+  const tStr = (c, p) => { const t = trendStr(c, p); return t ? `<span class="perf-kpi-trend${t.up ? '' : ' down'}">${t.up ? '↑ +' : '↓ '}${Math.abs(t.pct)}%</span>` : ''; };
+
+  // 6 KPI cards
+  document.getElementById('p-qr').textContent    = qrScans.toLocaleString();
+  document.getElementById('p-menu').textContent  = menuViews.toLocaleString();
+  document.getElementById('p-clicks').textContent = dishClicks.toLocaleString();
+  document.getElementById('p-ar').textContent    = arViews.toLocaleString();
+  document.getElementById('p-rate').textContent  = avgEngRate + '%';
+  document.getElementById('p-qr-trend').innerHTML    = tStr(qrScans, qrPrev);
+  document.getElementById('p-menu-trend').innerHTML  = tStr(menuViews, menuPrev);
+  document.getElementById('p-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
+  document.getElementById('p-ar-trend').innerHTML    = tStr(arViews, arPrev);
+  document.getElementById('p-rate-trend').innerHTML  = tStr(avgEngRate, avgEngRatePrev);
+
+  // Period summary panel
+  document.getElementById('ps-qr').textContent     = qrScans.toLocaleString();
+  document.getElementById('ps-menu').textContent   = menuViews.toLocaleString();
+  document.getElementById('ps-clicks').textContent = dishClicks.toLocaleString();
+  document.getElementById('ps-ar-val').textContent = arViews.toLocaleString();
+  document.getElementById('ps-rate-val').textContent = avgEngRate + '%';
+  document.getElementById('ps-qr-trend').innerHTML     = tStr(qrScans, qrPrev);
+  document.getElementById('ps-menu-trend').innerHTML   = tStr(menuViews, menuPrev);
+  document.getElementById('ps-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
+  document.getElementById('ps-ar-trend').innerHTML     = tStr(arViews, arPrev);
+  document.getElementById('ps-rate-trend').innerHTML   = tStr(avgEngRate, avgEngRatePrev);
 
   // Top performer (highest dish views)
   const topDish = [...perfEnriched].sort((a,b) => b.views - a.views)[0];
