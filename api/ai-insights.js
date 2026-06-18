@@ -24,10 +24,14 @@ ${JSON.stringify(data, null, 2)}`;
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
       }
     );
     const result = await resp.json();
+    if (result.error) {
+      console.error('Gemini error:', result.error);
+      return res.json({ insight: `AI error: ${result.error.message}` });
+    }
     const insight = result?.candidates?.[0]?.content?.parts?.[0]?.text || 'No insights available right now.';
     res.json({ insight });
   } catch (err) {

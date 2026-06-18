@@ -37,6 +37,10 @@ Be concise, friendly, and specific. Answer in 2–4 sentences max unless asked f
       }
     );
     const result = await resp.json();
+    if (result.error) {
+      console.error('Gemini error:', result.error);
+      return res.json({ reply: `AI error: ${result.error.message}` });
+    }
     const reply = result?.candidates?.[0]?.content?.parts?.[0]?.text || 'I couldn\'t process that. Please try again.';
     res.json({ reply });
   } catch (err) {
