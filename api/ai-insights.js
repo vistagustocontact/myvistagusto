@@ -7,7 +7,7 @@ module.exports = async function handler(req, res) {
 
   const { restaurant_name, data } = req.body || {};
 
-  if (!process.env.GEMINI_API_KEY) {
+  if (!process.env.ANTHROPIC_API_KEY) {
     return res.json({ insight: 'AI insights will appear here once your VistaGusto AI is activated.' });
   }
 
@@ -19,20 +19,25 @@ Data:
 ${JSON.stringify(data, null, 2)}`;
 
   try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
-      }
-    );
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 256,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
     const result = await resp.json();
     if (result.error) {
-      console.error('Gemini error:', result.error);
+      console.error('Claude error:', result.error);
       return res.json({ insight: `AI error: ${result.error.message}` });
     }
-    const insight = result?.candidates?.[0]?.content?.parts?.[0]?.text || 'No insights available right now.';
+    const insight = result?.content?.[0]?.text || 'No insights available right now.';
     res.json({ insight });
   } catch (err) {
     console.error('ai-insights error:', err);
