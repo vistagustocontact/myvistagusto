@@ -339,6 +339,13 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
 .empty svg{stroke:var(--subtle);margin:0 auto .8rem;display:block}
 .empty-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
 .empty-sub{font-size:.76rem}
+/* ── ALLERGENS ── */
+.allergen-grid{display:flex;flex-wrap:wrap;gap:.35rem}
+.allergen-chip input{display:none}
+.allergen-chip label{display:flex;align-items:center;gap:.28rem;padding:.26rem .6rem;border-radius:20px;border:1.5px solid var(--border);font-size:.68rem;font-weight:500;cursor:pointer;transition:all .15s;color:var(--muted);user-select:none;white-space:nowrap}
+.allergen-chip label:hover{border-color:var(--red);color:var(--red)}
+.allergen-chip input:checked+label{background:#fff0f0;border-color:var(--red);color:var(--red)}
+
 /* ── AI FEATURES ── */
 .ai-insight-card {
   background: linear-gradient(135deg, #fff5f5 0%, #fff 60%);
@@ -692,6 +699,12 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
             </div>
             <div class="fg"><label>Description</label><textarea id="editDishDesc" rows="3" placeholder="Describe the dish, ingredients, allergens…"></textarea></div>
             <div class="fg" style="max-width:180px"><label>Price (€)</label><input type="number" id="editDishPrice" placeholder="0.00" step="0.01" min="0"></div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">Allergens</div>
+            <div style="font-size:.71rem;color:var(--muted);margin-bottom:.7rem">Select all allergens present in this dish (EU 14 major allergens)</div>
+            <div class="allergen-grid" id="editAllergens"></div>
           </div>
 
           <div class="settings-section">
@@ -1574,6 +1587,22 @@ async function addDish(e) {
   loadDishes();
 }
 
+const ALLERGENS = [
+  {id:'gluten',label:'Gluten',emoji:'🌾'},{id:'crustaceans',label:'Crustaceans',emoji:'🦐'},
+  {id:'eggs',label:'Eggs',emoji:'🥚'},{id:'fish',label:'Fish',emoji:'🐟'},
+  {id:'peanuts',label:'Peanuts',emoji:'🥜'},{id:'soybeans',label:'Soybeans',emoji:'🫘'},
+  {id:'milk',label:'Milk',emoji:'🥛'},{id:'nuts',label:'Tree Nuts',emoji:'🌰'},
+  {id:'celery',label:'Celery',emoji:'🥬'},{id:'mustard',label:'Mustard',emoji:'🌻'},
+  {id:'sesame',label:'Sesame',emoji:'⚪'},{id:'sulphites',label:'Sulphites',emoji:'🍇'},
+  {id:'lupin',label:'Lupin',emoji:'🌼'},{id:'molluscs',label:'Molluscs',emoji:'🐚'},
+];
+
+function renderAllergenChips(selected = []) {
+  document.getElementById('editAllergens').innerHTML = ALLERGENS.map(a =>
+    `<div class="allergen-chip"><input type="checkbox" id="al-${a.id}" value="${a.id}"${selected.includes(a.id)?' checked':''}><label for="al-${a.id}">${a.emoji} ${a.label}</label></div>`
+  ).join('');
+}
+
 function openEditDish(id) {
   const dish = demoDishes.find(d => d.id === id);
   if (!dish) return;
@@ -1584,6 +1613,7 @@ function openEditDish(id) {
   document.getElementById('editDishDesc').value = dish.description || '';
   document.getElementById('editDishActive').checked = dish.is_active;
   document.getElementById('editDishCategory').value = dish.category;
+  renderAllergenChips(dish.allergens || []);
   document.getElementById('editPhotoPreview').innerHTML = dish.photo_url
     ? `<img src="${dish.photo_url}" style="width:100%;height:140px;object-fit:cover;border-radius:8px">`
     : `<div style="height:140px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--subtle)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
@@ -1605,7 +1635,8 @@ async function saveEditDish() {
   const cat = (cats || []).find(c => c.name === categoryName)
     || (categoryName === 'Food' ? (cats || []).find(c => !isDrinkCat(c.name)) : (cats || []).find(c => isDrinkCat(c.name)));
 
-  const updates = { name, price, description, is_active, updated_at: new Date().toISOString() };
+  const allergens = ALLERGENS.filter(a => document.getElementById('al-'+a.id)?.checked).map(a => a.id);
+  const updates = { name, price, description, is_active, allergens, updated_at: new Date().toISOString() };
   if (cat) updates.category_id = cat.id;
 
   const { error } = await db.from('dishes').update(updates).eq('id', currentEditDish.id);
