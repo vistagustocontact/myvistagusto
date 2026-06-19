@@ -307,7 +307,7 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
 .top-perf-rate{font-size:.67rem;color:var(--red);font-weight:600;margin-top:.15rem;white-space:nowrap}
 
 /* ── PERF 5-COL TABLES ── */
-.perf-tables{display:grid;grid-template-columns:repeat(5,1fr);gap:.65rem;margin-bottom:1rem}
+.perf-tables{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:1rem}
 .perf-tbl{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
 .perf-tbl-head{display:flex;align-items:center;gap:.45rem;padding:.75rem .9rem;border-bottom:1px solid var(--border)}
 .perf-tbl-title{font-size:.75rem;font-weight:700;flex:1}
@@ -800,12 +800,12 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
           <div class="perf-kpi-value" id="p-rate">—</div>
           <div class="perf-kpi-trend" id="p-rate-trend"></div>
         </div>
-        <div class="perf-kpi top-perf">
-          <div class="perf-kpi-label" style="display:flex;align-items:center;gap:.35rem">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-            Top performer
+        <div class="perf-kpi top-perf" style="grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between;gap:1rem">
+          <div style="display:flex;align-items:center;gap:.35rem">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+            <span style="font-size:.62rem;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase">Top performer</span>
           </div>
-          <div class="top-perf-dish">
+          <div class="top-perf-dish" style="flex:1;justify-content:flex-end">
             <div class="top-perf-thumb" id="p-top-thumb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg></div>
             <div class="top-perf-info">
               <span class="top-perf-name" id="p-top-name">—</span>
