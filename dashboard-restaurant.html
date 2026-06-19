@@ -1434,7 +1434,7 @@ async function loadPerformance(range) {
 
   // Least viewed (active dishes only, sorted ascending by views)
   const lowViews = [...perfEnriched].filter(d => d.is_active).sort((a,b) => a.views - b.views).slice(0,5);
-  document.getElementById('pt-low-views').innerHTML = lowViews.some(d => d.views > 0)
+  document.getElementById('pt-low-views').innerHTML = lowViews.length > 0
     ? lowViews.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric">${d.views} views</span>`)).join('')
     : noData;
 
