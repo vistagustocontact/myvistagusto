@@ -789,6 +789,12 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
           <div class="perf-kpi-trend" id="p-ar-trend"></div>
         </div>
         <div class="perf-kpi">
+          <div class="perf-kpi-icon" style="background:#f0f9ff"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div class="perf-kpi-label">3D views</div>
+          <div class="perf-kpi-value" id="p-3d">—</div>
+          <div class="perf-kpi-trend" id="p-3d-trend"></div>
+        </div>
+        <div class="perf-kpi">
           <div class="perf-kpi-icon" style="background:var(--amber-bg)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
           <div class="perf-kpi-label">Engagement rate</div>
           <div class="perf-kpi-value" id="p-rate">—</div>
@@ -823,6 +829,7 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
           <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#ede9fe"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>Menu views</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-menu">—</span><span class="perf-summary-trend" id="ps-menu-trend"></span></div></div>
           <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#f0fdf4"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/></svg></span>Dish clicks</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-clicks">—</span><span class="perf-summary-trend" id="ps-clicks-trend"></span></div></div>
           <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#ede9fe"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></span>AR views</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-ar-val">—</span><span class="perf-summary-trend" id="ps-ar-trend"></span></div></div>
+          <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:#f0f9ff"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></span>3D views</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-3d-val">—</span><span class="perf-summary-trend" id="ps-3d-trend"></span></div></div>
           <div class="perf-summary-row"><span class="perf-summary-label"><span class="perf-summary-icon" style="background:var(--amber-bg)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>Engagement rate</span><div class="perf-summary-right"><span class="perf-summary-val" id="ps-rate-val">—</span><span class="perf-summary-trend" id="ps-rate-trend"></span></div></div>
         </div>
       </div>
@@ -838,6 +845,11 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
           <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span class="perf-tbl-title">Most viewed in AR</span></div>
           <div id="pt-top-ar"></div>
           <div class="perf-tbl-footer"><a href="#" onclick="showFullRanking('ar');return false">View all →</a></div>
+        </div>
+        <div class="perf-tbl">
+          <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span class="perf-tbl-title">Most viewed in 3D</span></div>
+          <div id="pt-top-3d"></div>
+          <div class="perf-tbl-footer"><a href="#" onclick="showFullRanking('3d');return false">View all →</a></div>
         </div>
         <div class="perf-tbl">
           <div class="perf-tbl-head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span class="perf-tbl-title">Least viewed</span></div>
@@ -1342,32 +1354,37 @@ async function loadPerformance(range) {
   const menuViews  = cnt(curr, 'menu_view');
   const dishClicks = cnt(curr, 'dish_view');
   const arViews    = cnt(curr, 'ar_view');
+  const views3d    = cnt(curr, '3d_view');
 
   const qrPrev    = cnt(prev, 'qr_scan');
   const menuPrev  = cnt(prev, 'menu_view');
   const clicksPrev = cnt(prev, 'dish_view');
   const arPrev    = cnt(prev, 'ar_view');
+  const prev3d    = cnt(prev, '3d_view');
 
   // Dish-level maps (built first so engagement rate can use per-dish averages)
-  const dishViewMap = {}, dishArMap = {}, dishViewPrevMap = {}, dishArPrevMap = {};
+  const dishViewMap = {}, dishArMap = {}, dish3dMap = {}, dishViewPrevMap = {}, dishArPrevMap = {}, dish3dPrevMap = {};
   curr.forEach(e => {
     if (!e.dish_id) return;
     if (e.event_type === 'dish_view') dishViewMap[e.dish_id] = (dishViewMap[e.dish_id] || 0) + 1;
     if (e.event_type === 'ar_view')   dishArMap[e.dish_id]   = (dishArMap[e.dish_id]   || 0) + 1;
+    if (e.event_type === '3d_view')   dish3dMap[e.dish_id]   = (dish3dMap[e.dish_id]   || 0) + 1;
   });
   prev.forEach(e => {
     if (!e.dish_id) return;
     if (e.event_type === 'dish_view') dishViewPrevMap[e.dish_id] = (dishViewPrevMap[e.dish_id] || 0) + 1;
     if (e.event_type === 'ar_view')   dishArPrevMap[e.dish_id]   = (dishArPrevMap[e.dish_id]   || 0) + 1;
+    if (e.event_type === '3d_view')   dish3dPrevMap[e.dish_id]   = (dish3dPrevMap[e.dish_id]   || 0) + 1;
   });
 
   perfEnriched = demoDishes.map(d => ({
     ...d,
-    views:    dishViewMap[d.id] || 0,
-    arViews:  dishArMap[d.id] || 0,
+    views:     dishViewMap[d.id] || 0,
+    arViews:   dishArMap[d.id] || 0,
+    tdViews:   dish3dMap[d.id] || 0,
     prevViews: dishViewPrevMap[d.id] || 0,
-    engRate:  (dishViewMap[d.id] || 0) > 0 ? Math.min(100, Math.round(((dishArMap[d.id] || 0) / dishViewMap[d.id]) * 100)) : 0,
-    growth:   ((dishViewMap[d.id] || 0) - (dishViewPrevMap[d.id] || 0))
+    engRate:   (dishViewMap[d.id] || 0) > 0 ? Math.min(100, Math.round(((dishArMap[d.id] || 0) / dishViewMap[d.id]) * 100)) : 0,
+    growth:    ((dishViewMap[d.id] || 0) - (dishViewPrevMap[d.id] || 0))
   }));
 
   // Engagement rate = AR views / dish views, only for dishes with actual AR activity
@@ -1388,23 +1405,27 @@ async function loadPerformance(range) {
   document.getElementById('p-menu').textContent  = menuViews.toLocaleString();
   document.getElementById('p-clicks').textContent = dishClicks.toLocaleString();
   document.getElementById('p-ar').textContent    = arViews.toLocaleString();
+  document.getElementById('p-3d').textContent    = views3d.toLocaleString();
   document.getElementById('p-rate').textContent  = avgEngRate + '%';
   document.getElementById('p-qr-trend').innerHTML    = tStr(qrScans, qrPrev);
   document.getElementById('p-menu-trend').innerHTML  = tStr(menuViews, menuPrev);
   document.getElementById('p-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
   document.getElementById('p-ar-trend').innerHTML    = tStr(arViews, arPrev);
+  document.getElementById('p-3d-trend').innerHTML    = tStr(views3d, prev3d);
   document.getElementById('p-rate-trend').innerHTML  = tStr(avgEngRate, avgEngRatePrev);
 
   // Period summary panel
   document.getElementById('ps-qr').textContent     = qrScans.toLocaleString();
   document.getElementById('ps-menu').textContent   = menuViews.toLocaleString();
   document.getElementById('ps-clicks').textContent = dishClicks.toLocaleString();
-  document.getElementById('ps-ar-val').textContent = arViews.toLocaleString();
+  document.getElementById('ps-ar-val').textContent  = arViews.toLocaleString();
+  document.getElementById('ps-3d-val').textContent   = views3d.toLocaleString();
   document.getElementById('ps-rate-val').textContent = avgEngRate + '%';
   document.getElementById('ps-qr-trend').innerHTML     = tStr(qrScans, qrPrev);
   document.getElementById('ps-menu-trend').innerHTML   = tStr(menuViews, menuPrev);
   document.getElementById('ps-clicks-trend').innerHTML = tStr(dishClicks, clicksPrev);
   document.getElementById('ps-ar-trend').innerHTML     = tStr(arViews, arPrev);
+  document.getElementById('ps-3d-trend').innerHTML     = tStr(views3d, prev3d);
   document.getElementById('ps-rate-trend').innerHTML   = tStr(avgEngRate, avgEngRatePrev);
 
   // Top performer (highest dish views)
@@ -1430,6 +1451,12 @@ async function loadPerformance(range) {
   const topAr = [...perfEnriched].sort((a,b) => b.arViews - a.arViews).slice(0,5);
   document.getElementById('pt-top-ar').innerHTML = topAr[0]?.arViews > 0
     ? topAr.filter(d => d.arViews > 0).map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric ar">${d.arViews} AR</span>`)).join('')
+    : noData;
+
+  // Most viewed in 3D
+  const top3d = [...perfEnriched].sort((a,b) => b.tdViews - a.tdViews).slice(0,5);
+  document.getElementById('pt-top-3d').innerHTML = top3d[0]?.tdViews > 0
+    ? top3d.filter(d => d.tdViews > 0).map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric" style="color:#0ea5e9">${d.tdViews} 3D</span>`)).join('')
     : noData;
 
   // Least viewed (active dishes only, sorted ascending by views)
@@ -1488,6 +1515,7 @@ function showFullRanking(type) {
   const cfg = {
     views:      { title: 'All dishes — most viewed',      sort: (a,b) => b.views - a.views,    metric: d => d.views + ' views',                      cls: 'red' },
     ar:         { title: 'All dishes — most viewed in AR', sort: (a,b) => b.arViews - a.arViews, metric: d => d.arViews + ' AR',                        cls: 'ar' },
+    '3d':       { title: 'All dishes — most viewed in 3D', sort: (a,b) => b.tdViews - a.tdViews, metric: d => d.tdViews + ' 3D',                        cls: '' },
     low:        { title: 'All dishes — least viewed',     sort: (a,b) => a.views - b.views,    metric: d => d.views + ' views',                      cls: '' },
     trending:   { title: 'All dishes — trending',         sort: (a,b) => b.growth - a.growth,  metric: d => (d.growth >= 0 ? '+' : '') + d.growth,   cls: 'up' },
     engagement: { title: 'All dishes — engagement rate',  sort: (a,b) => b.engRate - a.engRate, metric: d => d.engRate + '%',                          cls: '' }
