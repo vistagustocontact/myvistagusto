@@ -600,6 +600,7 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               Most viewed dishes
             </div>
+            <span style="font-size:.65rem;color:var(--muted);font-weight:500" id="ovDishPeriodLabel">Last 7 days</span>
           </div>
           <div id="topDishesList"></div>
           <a href="#" class="ov-view-all" onclick="showSection('menu',document.querySelectorAll('.nav-item')[1]);return false">View all dishes →</a>
@@ -614,6 +615,7 @@ img.sidebar-logo{height:72px;display:block;margin-bottom:.7rem;max-width:100%;mi
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
               Most viewed in AR
             </div>
+            <span style="font-size:.65rem;color:var(--muted);font-weight:500" id="ovArPeriodLabel">Last 7 days</span>
           </div>
           <div id="topArDishes"></div>
           <a href="#" class="ov-view-all" onclick="showSection('performance',document.querySelectorAll('.nav-item')[2]);return false">View all →</a>
@@ -1173,6 +1175,9 @@ async function loadOverview(range = '7d') {
 
   const fmt = d => d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
   document.getElementById('topbarDateText').textContent = fmt(periodStart) + ' — ' + fmt(now);
+  const periodLabel = range === '30d' ? 'Last 30 days' : 'Last 7 days';
+  document.getElementById('ovDishPeriodLabel').textContent = periodLabel;
+  document.getElementById('ovArPeriodLabel').textContent = periodLabel;
 
   if (demoDishes.length === 0) await loadDishes();
 
@@ -1421,11 +1426,11 @@ async function loadPerformance(range) {
     ? topViews.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric red">${d.views} views</span>`)).join('')
     : noData;
 
-  // Most viewed in AR — always show 5, sorted by AR views desc
+  // Most viewed in AR
   const topAr = [...perfEnriched].sort((a,b) => b.arViews - a.arViews).slice(0,5);
-  document.getElementById('pt-top-ar').innerHTML = topAr.map((d,i) =>
-    perfDishRow(d, i, `<span class="perf-dish-metric ar">${d.arViews > 0 ? d.arViews + ' AR' : '0 AR'}</span>`)
-  ).join('') || noData;
+  document.getElementById('pt-top-ar').innerHTML = topAr[0]?.arViews > 0
+    ? topAr.filter(d => d.arViews > 0).map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric ar">${d.arViews} AR</span>`)).join('')
+    : noData;
 
   // Least viewed (active dishes only, sorted ascending by views)
   const lowViews = [...perfEnriched].filter(d => d.is_active).sort((a,b) => a.views - b.views).slice(0,5);
@@ -1440,7 +1445,7 @@ async function loadPerformance(range) {
     : noData;
 
   // Engagement rate (ar_views / dish_views per dish)
-  const byEng = [...perfEnriched].sort((a,b) => b.engRate - a.engRate).slice(0,5);
+  const byEng = [...perfEnriched].filter(d => d.engRate > 0).sort((a,b) => b.engRate - a.engRate).slice(0,5);
   document.getElementById('pt-engagement').innerHTML = byEng.length > 0
     ? byEng.map((d,i) => perfDishRow(d, i, `<span class="perf-dish-metric" style="color:var(--amber)">${d.engRate}%</span>`)).join('')
     : noData;
